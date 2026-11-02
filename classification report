@@ -1,0 +1,25 @@
+ cross_entropy: 3.0720
+      accuracy: 0.5182
+     precision: 0.5681
+        recall: 0.5193
+            F1: 0.5048
+Validation loss: 3.6934
+Validation accuracy: 0.5182
+
+Classification report:
+                                  precision    recall  f1-score   support
+
+                c0: safe driving       0.61      0.48      0.54       737
+             c1: texting - right       0.69      0.62      0.65       742
+c2: talking on the phone - right       0.80      0.36      0.50       716
+              c3: texting - left       0.47      0.60      0.53       707
+ c4: talking on the phone - left       0.82      0.52      0.63       712
+         c5: operating the radio       0.48      0.91      0.63       691
+                    c6: drinking       0.66      0.22      0.33       691
+             c7: reaching behind       0.63      0.65      0.64       566
+             c8: hair and makeup       0.30      0.67      0.41       551
+        c9: talking to passenger       0.24      0.16      0.19       608
+
+                        accuracy                           0.52      6721
+                       macro avg       0.57      0.52      0.50      6721
+                    weighted avg       0.58      0.52      0.51      6721
