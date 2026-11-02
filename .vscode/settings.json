@@ -1,0 +1,32 @@
+{
+  // LaTeX Workshop config for printout/ (CVPR template). Uses plain pdflatex + bibtex, so it
+  // needs neither latexmk nor Perl. Requires a MiKTeX (or TeX Live) install on PATH.
+  "latex-workshop.latex.search.rootFiles.include": ["printout/main.tex"],
+  "latex-workshop.latex.recipe.default": "pdflatex > bibtex > pdflatex x2",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "-enable-installer",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": ["%DOCFILE%"]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex > bibtex > pdflatex x2",
+      "tools": ["pdflatex", "bibtex", "pdflatex", "pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.view.pdf.viewer": "tab"
+}
