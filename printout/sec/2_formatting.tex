@@ -1,67 +1,40 @@
-\section{Formatting your paper}
+\section{Training and Creating the Model}
 \label{sec:formatting}
 
-All text must be in two-column format.
-The total allowable size of the text area is $6\frac78$ inches (17.46 cm) wide by $8\frac78$ inches (22.54 cm) high.
-The columns should be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch (0.8 cm) space between them.
-The main title (on the first page) should begin 1 inch (2.54 cm) from the top edge of the page.
-The second and following pages should begin 1 inch (2.54 cm) from the top edge.
-On all pages, the bottom margin should be $1\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \times 11$-inch paper;
-for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge of the
-page.
+We modeled our original model from a previous submission on Kaggle created by Emmanuel Pintelas, training the model using ResNets and transfer learning. 
+The final accuracy with three epochs was 81.9\%. Between our three memembers, we split modification of the model into error analysis \& split protocol, convolution networks \& saturation, and development of non-neural networks.
 
 %-------------------------------------------------------------------------
-\subsection{Margins and page numbering}
+\subsection{Split Protocol}
 
-All printed material, including text, illustrations, and charts, must be kept
-within a print area $6\frac{7}{8}$ inches (17.46 cm) wide by $8\frac{7}{8}$ inches (22.54 cm)
-high.
-%
-Page numbers should be in the footer, centered, and $\frac{3}{4}$ inches from the bottom of the page.
-The review version should have page numbers, yet the final version submitted as camera ready should not show any page numbers.
-The \LaTeX\ template takes care of this when used properly.
+All data was split based on the provided 26 drivers, using 70\% of the set for training, and the final 30\% for testing validation.
+The split was based on previous industry reports\cite{maDigitalTwin2024} on the best split for their training model and became the basis for ours.
+A random image level split allows any duplicate frames of the same driver taken from the original videos in both the training and testing data for confirmation.
+Using \verb+GroupShuffleSplit+ with \verb+subject+ as the group, 200 candidate seeds with the split seed DEFINE created a held-out fraction near 30\% where all ten classes appear and chosen for performance.
+The final split uses NUMBER drivers for training (15,703 images) and NUMBER drivers for testing (6,721 images) with confirmation that the sets are disjoint.
 
 
 
 %-------------------------------------------------------------------------
-\subsection{Type style and fonts}
+\subsection{Error Analysis}
 
-Wherever Times is specified, Times Roman may also be used.
-If neither is available on your word processor, please use the font closest in
-appearance to Times to which you have access.
+Error analysis included metrics not previously shown for the model to help better determine accuracy, bias, as well as allow us to be able to determine the best modifications for finetuning.
+New statistics included: entropy loss, F1 precision, and total accuracy. These were accomplished by using sklearn metrics to be computed after and during the model.
 
-MAIN TITLE.
-Center the title $1\frac{3}{8}$ inches (3.49 cm) from the top edge of the first page.
-The title should be in Times 14-point, boldface type.
-Capitalize the first letter of nouns, pronouns, verbs, adjectives, and adverbs;
-do not capitalize articles, coordinate conjunctions, or prepositions (unless the title begins with such a word).
-Leave two blank lines after the title.
+Originally, the model did not fair the best with an accuracy of 51.8\%. 
+Recall was the highest with the driver operating the radio at 0.91, and steadily declined from mid 0.6 in makeup, texing, and reaching behind range down to 0.16 when talking to the passenger.
+Based on how similar some of the poses are such as texting and using the phone, the recall is a significantly higher due to the clusters it creates by similarity.
 
-AUTHOR NAME(s) and AFFILIATION(s) are to be centered beneath the title
-and printed in Times 12-point, non-boldface type.
-This information is to be followed by two blank lines.
+The largest issue that can be denoted from this data is the inability to generalize new drivers.
+Not only is this denoted in the accuracy, but the high cross entropy.
 
-The ABSTRACT and MAIN TEXT are to be in a two-column format.
-
-MAIN TEXT.
-Type main text in 10-point Times, single-spaced.
-Do NOT use double-spacing.
-All paragraphs should be indented 1 pica (approx.~$\frac{1}{6}$ inch or 0.422 cm).
-Make sure your text is fully justified---that is, flush left and flush right.
-Please do not place any additional blank lines between paragraphs.
-
-The captions of the figures and tables should be in 9-point Roman type as in \cref{fig:onecol,fig:short}.
-Short captions should be centered.  Table captions should be above tables, while figure captions should be below figures.
-
-\noindent Callouts should be 9-point Helvetica, non-boldface type.
-Initially capitalize only the first word of section titles and first-, second-, and third-order headings.
-
-FIRST-ORDER HEADINGS.
-(For example, {\large \bf 1. Introduction}) should be Times 12-point boldface, initially capitalized, flush left, with one blank line before and one blank line after.
-
-SECOND-ORDER HEADINGS.
-(For example, { \bf 1.1. Database elements}) should be Times 11-point boldface, initially capitalized, flush left, with one blank line before and one after.
-If you require a third-order heading (we discourage it), use 10-point Times, boldface, initially capitalized, flush left, preceded by one blank line, followed by a period, and your text on the same line.
+\begin{figure}[t]
+  \centering
+    \includegraphics[width=\linewidth]{figures/Val_Conf_Matrix.png}
+    \caption{Original confusion matrix after training.}
+    \label{ffig:confmat}
+  \hfill
+\end{figure}
 
 %-------------------------------------------------------------------------
 \subsection{Footnotes}

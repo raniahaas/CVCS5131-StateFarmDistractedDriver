@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  9 NOV 2026 13:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  9 NOV 2026 14:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -425,44 +425,53 @@ LaTeX Font Info:    Font shape `OMS/pcr/m/n' in size <9> not available
 Package natbib Warning: Citation `Authors14' on page 2 undefined on input line 112.
 
 
-Package natbib Warning: Citation `Authors14b' on page 2 undefined on input line 119.
+Package natbib Warning: Citation `Authors14b' on page 2 undefined on input line 118.
 
 [2]
 
-Package natbib Warning: Citation `Alpher02' on page 3 undefined on input line 188.
+Package natbib Warning: Citation `Alpher02' on page 3 undefined on input line 187.
 
 
-Package natbib Warning: Citation `Alpher03' on page 3 undefined on input line 189.
+Package natbib Warning: Citation `Alpher03' on page 3 undefined on input line 188.
 
 
-Package natbib Warning: Citation `Alpher04' on page 3 undefined on input line 189.
+Package natbib Warning: Citation `Alpher04' on page 3 undefined on input line 188.
 
 
-Package natbib Warning: Citation `Alpher03' on page 3 undefined on input line 191.
+Package natbib Warning: Citation `Alpher03' on page 3 undefined on input line 190.
 
 
-Package natbib Warning: Citation `Alpher03' on page 3 undefined on input line 191.
+Package natbib Warning: Citation `Alpher03' on page 3 undefined on input line 190.
 
 ) (./sec/2_formatting.tex [3]
-
-Package natbib Warning: Citation `Authors14' on page 4 undefined on input line 103.
-
-
-Package natbib Warning: Citation `Alpher02' on page 4 undefined on input line 105.
-
-
-Package natbib Warning: Citation `Alpher03' on page 4 undefined on input line 105.
+<figures/Val_Conf_Matrix.png, id=112, 477.7047pt x 465.4188pt>
+File: figures/Val_Conf_Matrix.png Graphic file (type png)
+<use figures/Val_Conf_Matrix.png>
+Package pdftex.def Info: figures/Val_Conf_Matrix.png  used on input line 33.
+(pdftex.def)             Requested size: 237.13594pt x 231.0328pt.
 
 
-Package natbib Warning: Citation `Alpher05' on page 4 undefined on input line 105.
+LaTeX Warning: Reference `fig:short-a' on page 1 undefined on input line 59.
 
 
-Package natbib Warning: Citation `Authors14b' on page 4 undefined on input line 105.
+Package natbib Warning: Citation `Authors14' on page 4 undefined on input line 76.
 
 
-Package natbib Warning: Citation `Authors14' on page 4 undefined on input line 105.
+Package natbib Warning: Citation `Alpher02' on page 4 undefined on input line 78.
 
-[4]) (./sec/3_finalcopy.tex) (./main.bbl (./main.brf)
+
+Package natbib Warning: Citation `Alpher03' on page 4 undefined on input line 78.
+
+
+Package natbib Warning: Citation `Alpher05' on page 4 undefined on input line 78.
+
+
+Package natbib Warning: Citation `Authors14b' on page 4 undefined on input line 78.
+
+
+Package natbib Warning: Citation `Authors14' on page 4 undefined on input line 78.
+
+[4 <./figures/Val_Conf_Matrix.png>]) (./sec/3_finalcopy.tex) (./main.bbl (./main.brf)
 \tf@brf=\write4
 \openout4 = `main.brf'.
 
@@ -470,29 +479,35 @@ Package natbib Warning: Citation `Authors14' on page 4 undefined on input line 1
 
 Package natbib Warning: There were undefined citations.
 
-[5] (./main.aux)
+[5
+
+] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 3D47D379F908D99DF17AB145445DB5F0;2741.
+(rerunfilecheck)             Checksum: 8C3202EE0315B1D1AB59E7AC2AFB9EAA;2695.
 Package rerunfilecheck Info: File `main.brf' has not changed.
-(rerunfilecheck)             Checksum: 3C17AA5F36F6F6AAA80C397B93F54280;119.
+(rerunfilecheck)             Checksum: D5E994C7E8CBA9325B225DFB3F4DE972;175.
  ) 
 Here is how much of TeX's memory you used:
- 14834 strings out of 467525
- 244399 string characters out of 5418982
+ 14822 strings out of 467525
+ 244238 string characters out of 5418982
  713386 words of memory out of 5000000
- 43498 multiletter control sequences out of 15000+600000
+ 43486 multiletter control sequences out of 15000+600000
  659816 words of font info for 109 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,10n,98p,497b,567s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,9n,98p,497b,531s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (5 pages, 170811 bytes).
+Output written on main.pdf (5 pages, 216546 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
+ 205 PDF objects out of 1000 (max. 8388607)
  168 compressed objects within 2 object streams
  34 named destinations out of 1000 (max. 500000)
- 145 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 150 words of extra memory for PDF output out of 10000 (max. 10000000)
 
