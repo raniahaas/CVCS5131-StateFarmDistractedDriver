@@ -1,18 +1,24 @@
-\section{Introduction}
+\section{Literary Analysis}
 \label{sec:intro}
 
-Please follow the steps outlined below when submitting your manuscript to the IEEE Computer Society Press.
-This style guide now has several important modifications (for example, you are no longer warned against the use of sticky tape to attach your artwork to the paper), so all authors should read this new version.
-
+To find a basis for creating a model, we first started with a literary analysis to find effective methods and shortcomings. 
+Each participant read numberous articles and summarized the teams' results.
 %-------------------------------------------------------------------------
-\subsection{Language}
+\subsection{Distracted Driving Detection using CNNs}
+Four CNN models were used to training their\cite{maDigitalTwin2024} collected data using transfer learning and softmax regression: VGG-16 model, AlexNet, GoogleNet, and ResNet. 
+The best performance came from the ResNet model, performing an accuracy of 92\%, out performing the other models by up to 6\%.
+The researchers concluded that most of the incorrect classifications from the models were due to the similarities in postures, such as drinking, hair and makeup, and texting on the phone with the left hand. 
+One possible implementation to help reduce the number of misclassifications is to combine their overall approach with a face-based approach or to replace the final fully connected layers with classifiers such as SVM or HMM. 
 
-All manuscripts must be in English.
+\subsection{Distracted Driving Monitoring with Artificial Intelligence}
 
-\subsection{Dual submission}
+The article\cite{xiongDrivingBehavior2026}, written by Hui Xiong and Zhiming Zhang (2026). The authors note in their overall abstract for the paper, that one of the leading causes of traffic accidents occur due to distracted driving.
+In the final experiment, the total F1 score used to measure performance of the model is represented by comparing the correct predictions to the actuality of the dangerous driving.
+In the five types of driving tested, normal, speeding, hard-breaking, distracted, and drowsy driving, all F1 scores exceed 90\% with the exception of hard braking receiving an F1 score of 88.48\%. 
+The system has an overall high performance, especially with consideration to the abnormal driving behaviors.
+Xiong and Zhang were able to implement a system to test for distracted driving in the form of a behavioral monitoring system through the use of machine learning and computer vision techniques alongside artificial intelligence. 
+The biggest short coming for their final model is more complex scenarios and overall road safety. 
 
-Please refer to the author guidelines on the \confName\ \confYear\ web page for a
-discussion of the policy on dual submissions.
 
 \subsection{Paper length}
 Papers, excluding the references section, must be no longer than eight pages in length.
