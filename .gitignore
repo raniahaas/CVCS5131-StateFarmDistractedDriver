@@ -1,0 +1,12 @@
+# macOS / editor
+.DS_Store
+.vscode/
+
+# Large generated model/cache artifacts (GitHub 100MB limit)
+rainforest/classical_cache/
+*.joblib
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
