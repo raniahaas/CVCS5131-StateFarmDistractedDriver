@@ -1,0 +1,5 @@
+model,parameters (M)
+A baseline,11.181642
+B +flip (same net as A),11.181642
+C +GRL,11.317596
+D +GRL +pose,11.323676

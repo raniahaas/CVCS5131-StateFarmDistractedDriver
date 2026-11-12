@@ -1,0 +1,11 @@
+classname,detection_rate,class_name
+c0,1.0,safe driving
+c1,1.0,texting - right
+c2,1.0,talking on the phone - right
+c3,1.0,texting - left
+c4,1.0,talking on the phone - left
+c5,1.0,operating the radio
+c6,1.0,drinking
+c7,1.0,reaching behind
+c8,1.0,hair and makeup
+c9,1.0,talking to passenger

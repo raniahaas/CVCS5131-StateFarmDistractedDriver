@@ -1,0 +1,188 @@
+=== A: Baseline (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.3900    0.2845    0.3290       355
+             c1: texting - right     0.8897    0.4558    0.6028       283
+c2: talking on the phone - right     0.3441    0.9730    0.5084       296
+              c3: texting - left     0.9778    0.6607    0.7885       333
+ c4: talking on the phone - left     0.7492    0.7799    0.7643       318
+         c5: operating the radio     0.9751    0.7209    0.8289       326
+                    c6: drinking     0.7112    0.9128    0.7995       321
+             c7: reaching behind     0.9435    0.5759    0.7152       290
+             c8: hair and makeup     0.5727    0.8455    0.6828       233
+        c9: talking to passenger     0.2500    0.0391    0.0676       256
+
+                        accuracy                         0.6270      3011
+                       macro avg     0.6803    0.6248    0.6087      3011
+                    weighted avg     0.6885    0.6270    0.6158      3011
+
+
+=== B: + Semantic flip (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.5582    0.3915    0.4603       355
+             c1: texting - right     0.8031    0.7350    0.7675       283
+c2: talking on the phone - right     0.4700    0.9797    0.6353       296
+              c3: texting - left     0.9925    0.7988    0.8852       333
+ c4: talking on the phone - left     0.9746    0.7233    0.8303       318
+         c5: operating the radio     0.6127    0.7423    0.6713       326
+                    c6: drinking     0.8731    0.8785    0.8758       321
+             c7: reaching behind     0.5780    0.4345    0.4961       290
+             c8: hair and makeup     0.5571    0.8369    0.6690       233
+        c9: talking to passenger     0.4062    0.1523    0.2216       256
+
+                        accuracy                         0.6699      3011
+                       macro avg     0.6826    0.6673    0.6512      3011
+                    weighted avg     0.6929    0.6699    0.6589      3011
+
+
+=== C: + Driver adversary (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.4654    0.3408    0.3935       355
+             c1: texting - right     0.8850    0.6254    0.7329       283
+c2: talking on the phone - right     0.3345    0.9426    0.4938       296
+              c3: texting - left     0.9527    0.4835    0.6414       333
+ c4: talking on the phone - left     0.9910    0.6918    0.8148       318
+         c5: operating the radio     0.6647    0.6810    0.6727       326
+                    c6: drinking     0.9449    0.7477    0.8348       321
+             c7: reaching behind     0.6667    0.4345    0.5261       290
+             c8: hair and makeup     0.5387    0.8670    0.6645       233
+        c9: talking to passenger     0.1149    0.0781    0.0930       256
+
+                        accuracy                         0.5872      3011
+                       macro avg     0.6558    0.5892    0.5868      3011
+                    weighted avg     0.6693    0.5872    0.5926      3011
+
+
+=== D: Flip + Pose (no adversary) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.6116    0.7408    0.6701       355
+             c1: texting - right     0.7833    0.8940    0.8350       283
+c2: talking on the phone - right     0.5975    0.9527    0.7344       296
+              c3: texting - left     0.9685    0.9219    0.9446       333
+ c4: talking on the phone - left     0.8785    0.8868    0.8826       318
+         c5: operating the radio     0.8605    0.7761    0.8161       326
+                    c6: drinking     0.9365    0.8723    0.9032       321
+             c7: reaching behind     0.8734    0.4759    0.6161       290
+             c8: hair and makeup     0.6519    0.8841    0.7505       233
+        c9: talking to passenger     0.3580    0.1133    0.1721       256
+
+                        accuracy                         0.7615      3011
+                       macro avg     0.7520    0.7518    0.7325      3011
+                    weighted avg     0.7624    0.7615    0.7441      3011
+
+
+=== E: Full (+ Pose fusion) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.7199    0.6732    0.6958       355
+             c1: texting - right     0.8369    0.6890    0.7558       283
+c2: talking on the phone - right     0.4991    0.9831    0.6621       296
+              c3: texting - left     0.9018    0.7447    0.8158       333
+ c4: talking on the phone - left     0.9921    0.7893    0.8792       318
+         c5: operating the radio     0.9378    0.6933    0.7972       326
+                    c6: drinking     0.8137    0.6667    0.7329       321
+             c7: reaching behind     0.9304    0.5069    0.6562       290
+             c8: hair and makeup     0.4295    0.8884    0.5790       233
+        c9: talking to passenger     0.1937    0.1445    0.1655       256
+
+                        accuracy                         0.6825      3011
+                       macro avg     0.7255    0.6779    0.6740      3011
+                    weighted avg     0.7447    0.6825    0.6878      3011
+
+
+=== A: Baseline (ImageNet) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.8892    0.9944    0.9388       355
+             c1: texting - right     0.9961    0.8940    0.9423       283
+c2: talking on the phone - right     0.9898    0.9865    0.9882       296
+              c3: texting - left     0.9141    0.9910    0.9510       333
+ c4: talking on the phone - left     0.9752    0.9874    0.9812       318
+         c5: operating the radio     0.9969    0.9908    0.9938       326
+                    c6: drinking     0.9968    0.9564    0.9762       321
+             c7: reaching behind     0.9893    0.9586    0.9737       290
+             c8: hair and makeup     0.6921    0.9742    0.8093       233
+        c9: talking to passenger     0.9574    0.5273    0.6801       256
+
+                        accuracy                         0.9339      3011
+                       macro avg     0.9397    0.9261    0.9235      3011
+                    weighted avg     0.9443    0.9339    0.9311      3011
+
+
+=== B: + Semantic flip (ImageNet) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.8121    0.9859    0.8906       355
+             c1: texting - right     1.0000    0.9046    0.9499       283
+c2: talking on the phone - right     0.9898    0.9797    0.9847       296
+              c3: texting - left     0.9940    0.9940    0.9940       333
+ c4: talking on the phone - left     0.9695    1.0000    0.9845       318
+         c5: operating the radio     0.9667    0.8896    0.9265       326
+                    c6: drinking     0.9873    0.9720    0.9796       321
+             c7: reaching behind     0.9556    0.8897    0.9214       290
+             c8: hair and makeup     0.6918    0.9056    0.7844       233
+        c9: talking to passenger     0.8603    0.6016    0.7080       256
+
+                        accuracy                         0.9200      3011
+                       macro avg     0.9227    0.9123    0.9124      3011
+                    weighted avg     0.9280    0.9200    0.9194      3011
+
+
+=== C: + Driver adversary (ImageNet) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.7825    0.9831    0.8714       355
+             c1: texting - right     0.9890    0.9541    0.9712       283
+c2: talking on the phone - right     0.9965    0.9730    0.9846       296
+              c3: texting - left     0.9532    0.9790    0.9659       333
+ c4: talking on the phone - left     0.9786    0.8648    0.9182       318
+         c5: operating the radio     0.9938    0.9785    0.9861       326
+                    c6: drinking     0.9928    0.8598    0.9215       321
+             c7: reaching behind     0.9886    0.9000    0.9422       290
+             c8: hair and makeup     0.6054    0.9614    0.7430       233
+        c9: talking to passenger     0.8912    0.5117    0.6501       256
+
+                        accuracy                         0.9030      3011
+                       macro avg     0.9172    0.8965    0.8954      3011
+                    weighted avg     0.9232    0.9030    0.9031      3011
+
+
+=== D: Flip + Pose (no adversary) (ImageNet) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.8373    0.9859    0.9056       355
+             c1: texting - right     1.0000    0.9647    0.9820       283
+c2: talking on the phone - right     0.9248    0.9561    0.9402       296
+              c3: texting - left     1.0000    0.9940    0.9970       333
+ c4: talking on the phone - left     0.9815    1.0000    0.9907       318
+         c5: operating the radio     0.9877    0.9816    0.9846       326
+                    c6: drinking     0.9968    0.9688    0.9826       321
+             c7: reaching behind     0.9756    0.9655    0.9705       290
+             c8: hair and makeup     0.6959    0.9528    0.8043       233
+        c9: talking to passenger     0.9487    0.4336    0.5952       256
+
+                        accuracy                         0.9296      3011
+                       macro avg     0.9348    0.9203    0.9153      3011
+                    weighted avg     0.9396    0.9296    0.9241      3011
+
+
+=== E: Full (+ Pose fusion) (ImageNet) (frozen test drivers) ===
+                                  precision    recall  f1-score   support
+
+                c0: safe driving     0.8575    0.9662    0.9086       355
+             c1: texting - right     0.9925    0.9329    0.9617       283
+c2: talking on the phone - right     0.9932    0.9899    0.9915       296
+              c3: texting - left     0.9940    1.0000    0.9970       333
+ c4: talking on the phone - left     0.9845    1.0000    0.9922       318
+         c5: operating the radio     0.9969    0.9939    0.9954       326
+                    c6: drinking     0.9969    0.9875    0.9922       321
+             c7: reaching behind     0.9964    0.9655    0.9807       290
+             c8: hair and makeup     0.6852    0.9528    0.7971       233
+        c9: talking to passenger     0.9306    0.5234    0.6700       256
+
+                        accuracy                         0.9392      3011
+                       macro avg     0.9428    0.9312    0.9287      3011
+                    weighted avg     0.9483    0.9392    0.9367      3011
