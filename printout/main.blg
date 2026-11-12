@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99e (TeX Live 2026)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: ieeenat_fullname.bst
+Database file #1: main.bib
+Warning--I didn't find a database entry for "Authors14"
+Warning--I didn't find a database entry for "Authors14b"
+Warning--I didn't find a database entry for "Alpher02"
+Warning--I didn't find a database entry for "Alpher03"
+Warning--I didn't find a database entry for "Alpher04"
+Warning--I didn't find a database entry for "Alpher05"
+You've used 3 entries,
+            2708 wiz_defined-function locations,
+            697 strings with 6209 characters,
+and the built_in function-call counts, 1493 in all, are:
+= -- 122
+> -- 126
+< -- 1
++ -- 42
+- -- 39
+* -- 126
+:= -- 254
+add.period$ -- 11
+call.type$ -- 3
+change.case$ -- 22
+chr.to.int$ -- 3
+cite$ -- 6
+duplicate$ -- 59
+empty$ -- 90
+format.name$ -- 44
+if$ -- 294
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 3
+newline$ -- 25
+num.names$ -- 12
+pop$ -- 36
+preamble$ -- 1
+purify$ -- 19
+quote$ -- 0
+skip$ -- 52
+stack$ -- 0
+substring$ -- 6
+swap$ -- 3
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 33
+warning$ -- 0
+while$ -- 9
+width$ -- 0
+write$ -- 50
+(There were 6 warnings)
