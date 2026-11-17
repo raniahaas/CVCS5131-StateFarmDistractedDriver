@@ -1,4 +1,4 @@
-\begin{thebibliography}{3}
+\begin{thebibliography}{4}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -10,6 +10,11 @@ Yunsheng Ma, Runjia Du, Amr Abdelraouf, Kyungtae Han, Rohit Gupta, and Ziran Wan
 \newblock Driver digital twin for online recognition of distracted driving behaviors.
 \newblock \emph{IEEE TPAMI}, 9, 2024.
 \newblock Face and Gesture submission ID 324. Supplied as supplemental material {\tt fg324.pdf}.
+
+\bibitem[NHSTA(2026)]{nhstaStats}
+NHSTA.
+\newblock Distracted driving.
+\newblock 2026.
 
 \bibitem[Tran et~al.(2018)Tran, Do, Sheng, Bai, and Chowdhary]{tranDeepLDriving2018}
 Duy Tran, Ha~Mahn Do, Weihua Sheng, He Bai, and Girish Chowdhary.
