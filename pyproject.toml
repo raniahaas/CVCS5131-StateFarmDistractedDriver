@@ -1,0 +1,113 @@
+[project]
+name = "state-farm-distracted-driver"
+version = "0.1.0"
+description = "Identity-disentangled, pose-guided distracted-driver classification (CVCS5131)"
+requires-python = ">=3.12"
+dependencies = [
+    "torch>=2.7",
+    "torchvision>=0.22",
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.8",
+    "pillow>=10.0",
+    "tqdm>=4.65",
+    "ipykernel>=6.29",
+    "jupyter>=1.0",
+    "scikit-image>=0.26.0",
+]
+
+# ---------------------------------------------------------------------------
+# Hardware note: developed on a laptop with an NVIDIA GeForce RTX 5070 (12 GB VRAM,
+# Blackwell architecture, compute capability sm_120, driver 610.71 / CUDA 13.3).
+# Blackwell GPUs need a PyTorch build compiled against CUDA >= 12.8, so torch and
+# torchvision are pulled from the official cu128 wheel index instead of PyPI (whose
+# Windows wheels are CPU-only). The driver's CUDA 13.x is backward compatible with cu128.
+# ---------------------------------------------------------------------------
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+# ---------------------------------------------------------------------------
+# Dev tooling: `uv sync` installs the "dev" group by default.
+#   uv run ruff check .        # lint (add --fix to auto-fix)
+#   uv run ruff format .       # format
+#   uv run pyrefly check       # type check
+# ---------------------------------------------------------------------------
+[dependency-groups]
+dev = [
+    "ruff>=0.8",
+    "pyrefly>=0.30",
+    "types-tqdm>=4.70.0.20261106",
+    "papermill>=2.7.0",
+    "scipy-stubs>=1.18.1.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["kaggleDownloads", "printout"]   # third-party / LaTeX material, not our code
+
+[tool.ruff.lint]
+select = [
+    "E", "W",    # pycodestyle
+    "F",         # pyflakes
+    "I",         # isort
+    "B",         # flake8-bugbear
+    "UP",        # pyupgrade
+    "SIM",       # flake8-simplify
+    "NPY",       # numpy-specific
+    "C4",        # comprehensions
+    "RUF",       # ruff-specific
+]
+ignore = [
+    "E741",      # ambiguous variable names (l, I, O): fine for short math-style names
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["learned_models"]
+
+[tool.ruff.lint.per-file-ignores]
+# Notebook cells are scripts that share one namespace and are written compactly.
+"*.ipynb" = [
+    "E402",      # imports mid-notebook
+    "E501",      # long lines: cells are written compactly; the formatter still wraps code to line-length
+    "E701", "E702", "E703",   # `a = 1; b = 2` and one-line blocks
+    "E731",      # lambda assignment
+    "F811",      # redefinition of names between cells
+    "B007",      # unused loop variable
+    "NPY002",    # np.random.seed is used deliberately by seed_everything()
+    "B905",      # zip() without strict=
+    "RUF001", "RUF002", "RUF003",   # non-ASCII characters in strings/comments (e.g. ±, ×)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+[tool.pyrefly]
+python-version = "3.12"
+project-includes = ["*.py", "*.ipynb"]
+project-excludes = ["**/.venv/**", "kaggleDownloads/**", "printout/**", "cache/**", "outputs/**", "data/**"]
+search-path = ["."]
+
+# The notebooks lean on matplotlib/pandas/torch idioms whose stubs are imprecise (e.g. plt.subplots() unpacking,
+# Series indexing, autograd.Function overrides). Those checks are silenced; real bugs (unknown names, unbound
+# variables, wrong attributes on our own classes) are still reported.
+[tool.pyrefly.errors]
+bad-argument-type = false
+bad-index = false
+bad-override = false
+bad-override-param-name = false
+missing-attribute = false
+no-matching-overload = false
+unsupported-operation = false
+bad-assignment = false
+bad-argument-count = false
+not-iterable = false

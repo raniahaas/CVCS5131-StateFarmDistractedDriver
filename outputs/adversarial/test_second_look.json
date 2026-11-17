@@ -1,0 +1,53 @@
+{
+  "final": "confusion, lam 1 + pose",
+  "runs": [
+    {
+      "variant": "confusion, lam 1 + pose",
+      "seed": 42,
+      "accuracy": 0.9269345732314845,
+      "macro_f1": 0.91518719214928,
+      "log_loss": 0.3418000042438507,
+      "probe": 0.47620154764380296,
+      "probe_mlp": 0.4692955521832042,
+      "probe_majority": 0.25623194304953967,
+      "probe_rand": 0.9853917662682603,
+      "probe_l3": 0.9734575548289761,
+      "probe_chance": 0.25,
+      "drv_acc_train": 0.08266295379537954,
+      "drv_loss_train": 3.0224632107385316,
+      "train_time": 209.8905165195465
+    },
+    {
+      "variant": "confusion, lam 1 + pose",
+      "seed": 43,
+      "accuracy": 0.9262703420790435,
+      "macro_f1": 0.918452018684753,
+      "log_loss": 0.3011738061904907,
+      "probe": 0.4010204803978391,
+      "probe_mlp": 0.3919051769525841,
+      "probe_majority": 0.25623194304953967,
+      "probe_rand": 0.9860557768924303,
+      "probe_l3": 0.9545586472053482,
+      "probe_chance": 0.25,
+      "drv_acc_train": 0.07838283828382839,
+      "drv_loss_train": 3.0257953991590947,
+      "train_time": 211.759459733963
+    },
+    {
+      "variant": "confusion, lam 1 + pose",
+      "seed": 44,
+      "accuracy": 0.9282630355363667,
+      "macro_f1": 0.9182170657846095,
+      "log_loss": 0.28496116399765015,
+      "probe": 0.35926794412908536,
+      "probe_mlp": 0.3817709416381664,
+      "probe_majority": 0.25623194304953967,
+      "probe_rand": 0.9833997343957503,
+      "probe_l3": 0.9653930386999439,
+      "probe_chance": 0.25,
+      "drv_acc_train": 0.08952145214521452,
+      "drv_loss_train": 3.0179582248033077,
+      "train_time": 211.34083700180054
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+,GPU-hours
+cross-validation (Section 6),1.861822042266528
+leakage study (Section 7),0.18960830496417153
+final one-shot models (Section 8.5),0.7577984995974435
+"scaling analysis (Section 11, sub-100% sizes)",2.1837887114948695
+TOTAL training,4.993017558323013
+"pose keypoint extraction (Section 2, one-time GPU hours)",0.39698980934090083
+classical models (CPU hours),0.02980868849489424

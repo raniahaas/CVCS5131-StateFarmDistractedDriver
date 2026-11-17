@@ -1,0 +1,13 @@
+,GPU-hours
+Section 3 (reference points),0.6851568475034502
+Section 4 (stronger head),0.14503521502017974
+Section 5 (strength and ramp),0.17337311797671848
+Section 6 (confusion loss),0.6924255757199393
+Section 7 (several stages),0.14874018987019857
+Section 8 (strong augmentation),0.11169820692804125
+Section 9 (screen of three changes),0.19022593319416045
+Section 10 (confusion strength),0.6453655432992511
+Section 11 (head ensembles),1.0418913973040052
+Section 15 (five folds and pose fusion),7.8951001067294015
+"Section 16 (test models, second look)",0.17583078145980835
+TOTAL training,11.904842915005155

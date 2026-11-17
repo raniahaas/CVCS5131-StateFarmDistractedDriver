@@ -1,0 +1,4 @@
+fold,train drivers,val drivers,train images,val images,val drivers (ids)
+1,15,7,13027,6386,"p002, p021, p045, p047, p049, p064, p066"
+2,15,7,13051,6362,"p012, p016, p022, p035, p039, p051, p061"
+3,14,8,12748,6665,"p015, p024, p026, p042, p056, p072, p075, p081"

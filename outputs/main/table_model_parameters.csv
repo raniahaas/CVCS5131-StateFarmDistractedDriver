@@ -1,0 +1,7 @@
+model,parameters (M)
+A baseline,11.181642
+B +GRL,11.317596
+C +pose,11.187722
+D +GRL +pose,11.323676
+E +confusion,11.317596
+F +confusion +pose,11.323676

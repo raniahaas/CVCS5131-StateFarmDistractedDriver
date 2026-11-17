@@ -1,0 +1,13 @@
+init,group,adversary,driver_probe_acc,driver_probe_acc_train,driver_head_acc,accuracy,macro_f1
+scratch,visual only,no adversary,0.796 ± 0.054,0.150 ± 0.028,,0.507 ± 0.059,0.505 ± 0.054
+scratch,visual only,gradient reversal,0.823 ± 0.040,0.181 ± 0.058,0.095 ± 0.001,0.520 ± 0.079,0.522 ± 0.082
+scratch,visual only,confusion loss,0.668 ± 0.041,0.074 ± 0.015,0.107 ± 0.002,0.501 ± 0.028,0.503 ± 0.042
+scratch,with pose,no adversary,0.827 ± 0.028,0.170 ± 0.024,,0.526 ± 0.034,0.527 ± 0.028
+scratch,with pose,gradient reversal,0.836 ± 0.025,0.191 ± 0.026,0.095 ± 0.001,0.544 ± 0.097,0.542 ± 0.078
+scratch,with pose,confusion loss,0.746 ± 0.077,0.079 ± 0.016,0.118 ± 0.009,0.693 ± 0.087,0.683 ± 0.082
+imagenet,visual only,no adversary,0.713 ± 0.073,0.160 ± 0.023,,0.855 ± 0.051,0.853 ± 0.051
+imagenet,visual only,gradient reversal,0.589 ± 0.100,0.152 ± 0.022,0.095 ± 0.002,0.862 ± 0.057,0.859 ± 0.057
+imagenet,visual only,confusion loss,0.315 ± 0.033,0.067 ± 0.000,0.127 ± 0.010,0.856 ± 0.057,0.854 ± 0.060
+imagenet,with pose,no adversary,0.585 ± 0.069,0.149 ± 0.036,,0.845 ± 0.048,0.842 ± 0.048
+imagenet,with pose,gradient reversal,0.550 ± 0.071,0.156 ± 0.029,0.095 ± 0.001,0.874 ± 0.038,0.870 ± 0.038
+imagenet,with pose,confusion loss,0.396 ± 0.032,0.066 ± 0.005,0.129 ± 0.006,0.873 ± 0.021,0.871 ± 0.021

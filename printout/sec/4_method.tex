@@ -1,0 +1,46 @@
+\section{Method}
+\label{sec:method}
+
+% Budget: about 1.0 column-page plus one figure (the model diagram).
+% Rubric (3 pts): "clear enough to reproduce, attribution of reused work explicit" (R3).
+% Figure: figures/model.pdf or figures/overview.pdf from the repo (check that it shows the
+% current A to D design with no flip). Copy it into printout/figures/ before including it.
+
+%-------------------------------------------------------------------------
+\subsection{Starting Point and Attribution}
+% R3. Link the source repository or notebook URL and list plainly what we added, changed,
+% and removed (for example, driver-grouped splits, the pose stream, the adversary, the probe,
+% all analysis). The paragraph below is the earlier draft. Its 81.9% figure came from a
+% random split, so label it that way or drop it.
+
+We modeled our original model from a previous submission on Kaggle created by Emmanuel Pintelas, training the model using ResNets and transfer learning.
+The final accuracy with three epochs was 81.9\%. Between our three memembers, we split modification of the model into error analysis \& split protocol, convolution networks \& saturation, and development of non-neural networks.
+
+\TODO{Add the source URL and an explicit list of what we changed.}
+
+%-------------------------------------------------------------------------
+\subsection{Classical Baselines}
+% Source: distracted_driver.ipynb Section 12 (rainforest/hog_random_forest.py features).
+% Three Random Forests, 200 trees, balanced class weights, same folds and test drivers.
+%   HOG (128x96 grayscale, 5,940 features), pose image-centered (19), pose body-centered (19).
+\TODO{Classical baselines, features and forest settings.}
+
+%-------------------------------------------------------------------------
+\subsection{Network}
+% Source: distracted_driver.ipynb Section 4 (DriverNet), table_model_parameters.csv.
+% Visual stream: ResNet-18, from scratch or ImageNet weights, pooled 512-d feature.
+% Pose stream: frozen COCO Keypoint R-CNN, 9 upper-body joints, body-centered, plus a
+%   detected flag (19 numbers), 2-layer MLP to 64-d, concatenated before the class head.
+% Driver adversary: a driver head on the visual feature behind a gradient reversal layer,
+%   lambda ramped with the DANN schedule 2/(1+exp(-10p))-1 to LAMBDA_MAX = 1.0.
+%   One equation for the total loss (class CE minus lambda times driver CE).
+% Ablation ladder table: A baseline, B + adversary, C + pose, D both, each with -S and -I.
+\TODO{Network description, loss equation, and the A to D ladder table.}
+
+%-------------------------------------------------------------------------
+\subsection{Training Details}
+% Source: distracted_driver.ipynb cell 3 settings.
+% 224x224 input, batch 64, 15 epochs, AdamW, OneCycle, peak LR 1e-3 (scratch) or 3e-4
+% (ImageNet backbone) and 1e-3 for new heads, weight decay 1e-4, mixed precision, color jitter
+% only (no flips, Sec. 7), seed 42, final-epoch weights (no early stopping, no tuning).
+\TODO{Training settings in 4 or 5 sentences.}

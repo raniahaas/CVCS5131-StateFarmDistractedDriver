@@ -1,0 +1,64 @@
+\section{Experiments and Results}
+\label{sec:experiments}
+
+% Budget: about 1.6 column-pages. This section carries required components 1 to 4.
+% Rubric (4 pts): appropriate metrics, defended, comparison to the state of the art qualified.
+% All numbers below must come from the A to D re-run of distracted_driver.ipynb. The current
+% files in outputs/ are from the older A to E run with the flip.
+
+%-------------------------------------------------------------------------
+\subsection{Leakage: Random versus Driver-Grouped Split}
+\label{sec:leakage}
+% Required by the split rules (both splits must be reported).
+% Source: Section 7, table_leakage_study.csv, table_leakage_group_split.csv, fig05.
+% Same model (A), same budget, only the split differs. Report the gap for both initializations
+% and for HOG + RF (Table/Fig. 17 diamonds) to show the leak comes from the data, not the network.
+\TODO{Leakage table or figure, and the size of the gap.}
+
+%-------------------------------------------------------------------------
+\subsection{Classical Baselines versus CNNs}
+% Required component 1. Source: Section 12, Table/Figure 17.
+% Where HOG + RF sits between A-S and A-I on unseen drivers. Whether body-centering helps
+% the pose forest. What the deep network actually buys.
+\TODO{Classical versus CNN results.}
+
+%-------------------------------------------------------------------------
+\subsection{Ablation of the Adversary and Pose Fusion}
+% Required component 2 (learned models). Source: Sections 8.1 and 8.6,
+% table_ablation_summary.csv, table_ablation_deltas.csv, fig16_ablation_summary.
+% Main results table: CV accuracy, macro-F1, log-loss, probe (mean and std over folds) and
+% test accuracy and macro-F1 for A to D, both initializations, plus the classical rows.
+% Read every difference against the fold std and the "helped in k of 3 folds" count.
+\TODO{Main results table and paired ablation deltas.}
+
+%-------------------------------------------------------------------------
+\subsection{Pretraining: ImageNet versus From Scratch}
+% Source: Section 10, table_init_comparison.csv, table_init_paired_delta.csv, fig13.
+% The ImageNet gain at every rung and whether it changes the sign of each component's effect.
+\TODO{Initialization comparison, two or three sentences and the key delta.}
+
+%-------------------------------------------------------------------------
+\subsection{Generalization: Number of Training Drivers}
+% Required component 3. Source: Section 11, scaling table, fig14_scaling.
+% Answer both questions the instructions ask in one sentence each.
+%   Where does it saturate? (or say it has not saturated at 22 drivers)
+%   What would more data be worth? (the gain from the last step, with its spread)
+% Whether D beats A when drivers are scarce.
+\TODO{Scaling curve, where it saturates, and what more drivers would be worth.}
+
+%-------------------------------------------------------------------------
+\subsection{Robustness to Unseen Drivers and Identity Removal}
+% Required component 4 (held-out subject shift). Sources: Section 8.5 (table_final_test.csv,
+% per-test-driver accuracy, fig15), Section 8.2 (fig10 driver probe), Section 9 (fig12).
+% Spread of accuracy across the four test drivers. Whether the adversary lowers the probe.
+% The adversarial study (adversarialStudy.ipynb) goes here in one or two sentences, with
+% details in the supplementary material.
+\TODO{Per-driver test accuracy, identity probe, and the adversary result.}
+
+%-------------------------------------------------------------------------
+\subsection{Comparison to the State of the Art}
+% R5. A small table of published numbers next to ours. State in the text that published
+% numbers use hidden test sets or random splits and are not directly comparable. Compare our
+% random-split number to random-split results and our grouped number to grouped results.
+% Never claim to beat the state of the art.
+\TODO{Qualified comparison with published results.}

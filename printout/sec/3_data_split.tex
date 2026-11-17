@@ -1,0 +1,44 @@
+\section{Dataset and Split Protocol}
+\label{sec:data}
+
+% Budget: about 0.6 column-pages. Rubric: split protocol is worth 5 implementation points
+% ("correct unit identified, both splits run, test set used once").
+
+%-------------------------------------------------------------------------
+\subsection{Dataset}
+% Source: distracted_driver.ipynb Section 1, fig01_class_and_driver_balance, fig02_class_examples.
+% 22,424 labeled frames, 26 drivers, 10 classes, one fixed camera, 640x480.
+% Classes are close to balanced but images per driver vary.
+% c1/c3 and c2/c4 differ only by hand, which is why plain horizontal flips corrupt labels.
+% Data use (R12): one sentence that we follow the Kaggle competition rules, do not
+% redistribute images, and checked the rules before showing frames in this paper.
+\TODO{Dataset statistics, class list, and data use statement. Optional small figure of one frame per class.}
+
+%-------------------------------------------------------------------------
+\subsection{Split Protocol}
+% Source: distracted_driver.ipynb Sections 1 and 6.1 (table_folds.csv).
+% The paragraphs below are the earlier draft. Update them to the final protocol:
+%   unit = driver. 4 drivers frozen by seed (SEED = 42) as the test set, never used for
+%   training, curves or choices. The other 22 development drivers are split with GroupKFold
+%   into 3 driver-disjoint folds. Each final model is trained on all 22 and scored once.
+% If the interim checkpoint declared a different split (the 70/30 split below), say so and
+% say why it changed. A silent change looks like test-set shopping.
+% State explicitly that no model or setting was chosen from test-set numbers.
+
+All data was split based on the provided 26 drivers, using 70\% of the set for training, and the final 30\% for testing validation.
+The split was based on previous industry reports\cite{maDigitalTwin2024} on the best split for their training model and became the basis for ours.
+A random image level split allows any duplicate frames of the same driver taken from the original videos in both the training and testing data for confirmation.
+Using \verb+GroupShuffleSplit+ with \verb+subject+ as the group, 200 candidate seeds with the split seed DEFINE created a held-out fraction near 30\% where all ten classes appear and chosen for performance.
+The final split uses NUMBER drivers for training (15,703 images) and NUMBER drivers for testing (6,721 images) with confirmation that the sets are disjoint.
+
+%-------------------------------------------------------------------------
+\subsection{Metrics}
+% Source: table_results_per_fold.csv columns. Defend each choice (R6, results rubric 4 pts).
+%   Macro-F1 as the primary score (balanced classes, but per-class errors differ).
+%   Accuracy for comparison with prior work. Multi-class log-loss, the Kaggle metric,
+%   which also penalizes over-confidence (a calibration signal). ROC-AUC on the test set.
+%   Per-class F1 and confusion matrices to show where errors sit.
+%   Driver-identity probe, a linear classifier that names the held-out driver from frozen
+%   features, compared against chance (1 / number of held-out drivers). It measures the
+%   mechanism, not the task.
+\TODO{Metrics and why each one was chosen.}

@@ -25,12 +25,27 @@ Cincinnati, OH, USA\\
 
 \begin{document}
 \maketitle
-\input{sec/0_abstract}    
+% Page budget. The limit is 6 pages for CS5131 and 8 for CS6031, counted from the title to the
+% end of the closing statements. The references do not count toward the limit, so the
+% bibliography may run onto page 7 (or 9) and beyond. Everything above the bibliography counts,
+% including the Reproducibility and AI Tool Disclosure statements.
+% Sizes below are full pages (both columns) and sum to about 6. For 8 pages, grow Related Work
+% (12 to 15 papers with a critical comparison), Experiments, and Error Analysis first.
+%   Abstract + Introduction 0.75 | Related Work 0.75 | Dataset and Split 0.6 | Method 1.0
+%   Experiments 1.6 | Error Analysis 0.8 | Discussion 0.35 | Conclusion 0.15 | Statements 0.15
+% Main-body figures and tables (about 7): model diagram, main results table (with classical
+% rows), leakage figure or table, scaling figure (fig14), failure cases with Grad-CAM
+% (fig11b/11c), confusion matrix of the final model (fig09 or fig15), SOTA table (small).
+\input{sec/0_abstract}
 \input{sec/1_intro}
 \input{sec/2_related_work}
-\input{sec/3_training}
-\input{sec/4_limitations}
-\input{sec/5_conclusion}
+\input{sec/3_data_split}
+\input{sec/4_method}
+\input{sec/5_experiments}
+\input{sec/6_error_analysis}
+\input{sec/7_discussion}
+\input{sec/8_conclusion}
+\input{sec/9_statements}
 {
     \small
     \nocite{maDigitalTwin2024, xiongDrivingBehavior2026, tranDeepLDriving2018}
