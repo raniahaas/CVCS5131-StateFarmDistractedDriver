@@ -5,20 +5,37 @@ To find a basis for creating a model, we first started with a literary analysis 
 Each participant read numberous articles and summarized the teams' results.
 %-------------------------------------------------------------------------
 \subsection{Distracted Driving Detection using CNNs}
-Four CNN models were used to training their\cite{maDigitalTwin2024} collected data using transfer learning and softmax regression: VGG-16 model, AlexNet, GoogleNet, and ResNet. 
-The best performance came from the ResNet model, performing an accuracy of 92\%, out performing the other models by up to 6\%.
-The researchers concluded that most of the incorrect classifications from the models were due to the similarities in postures, such as drinking, hair and makeup, and texting on the phone with the left hand. 
-One possible implementation to help reduce the number of misclassifications is to combine their overall approach with a face-based approach or to replace the final fully connected layers with classifiers such as SVM or HMM. 
-This lead our team for a good foundation of classificatins to be wary of.
-Although they are using a different set for testing and training, it does allow for considerations for our teams on similar datasets to use fully connected layers.
+
+Ma et. al\cite{maDigitalTwin2024} used a driver digital twin framework for online recognition of distracted driving.
+It paired a transformer-based module for recognizing driver actions with temporal localization modules that detects teh distracted behaviors.
+They reported state-of-the-art results on both tasks (in 2024), with 6.5\% higher on SFDD (State Farm Distracted Driver).
+Since SFDD is the same set we use, this was a great starting point for our group.
+Taking inspiration from their multi-task scheme, our model also uses a secon signal alongside teh image, taking in upper-body prose keypoints as inputs and a driver identity head as an aversary.
+Although our goals differ, it still improved our action recognition with a strong architecture and an auxiliary task.
+Since we used a similar but smaller ResNet, our numbers were limited in comparison to theirs.
+We found that scoring on frames from drivers seen in training influences accuracy (0.997 for our ImageNet, against teh 0.855 on held-out drivers), which can only be comparable if they use the same driver split.
 
 \subsection{Distracted Driving Monitoring with Artificial Intelligence}
 
-The article\cite{xiongDrivingBehavior2026}, written by Hui Xiong and Zhiming Zhang (2026). The authors note in their overall abstract for the paper, that one of the leading causes of traffic accidents occur due to distracted driving.
+Xiong and Zhang\cite{xiongDrivingBehavior2026}, use a broader driving-behavioral monitoring system with on-board cameras, motion sensors, and live analysis.
+Their model uses convolution networks for image processing and recurrent networks for time-serives driving data, trained by using cross-entropy loss and backpropogation with gradient-descent weight updates.
 In the final experiment, the total F1 score used to measure performance of the model is represented by comparing the correct predictions to the actuality of the dangerous driving.
-In the five types of driving tested, normal, speeding, hard-breaking, distracted, and drowsy driving, all F1 scores exceed 90\% with the exception of hard braking receiving an F1 score of 88.48\%. 
-The system has an overall high performance, especially with consideration to the abnormal driving behaviors.
-Xiong and Zhang were able to implement a system to test for distracted driving in the form of a behavioral monitoring system through the use of machine learning and computer vision techniques alongside artificial intelligence. 
 The biggest short coming for their final model is more complex scenarios and overall road safety. 
-Without more data or the incoorperation of live artifical intelligence detection, the best implementation our group could denote was their achieved F1 score.
-To achieve similar results, we can use the given RNN and image analysis.
+Based on their results, we used the same training of our CNN with cross-entropy on the camera frames of the drives, but since our dataset is smaller our evaluation was significantly stricter.
+The final report does not say if they withheld any drivers in their training and testing split, however we found this was critical to do as random frame splits lets the netowrk memorize drivers.
+Even with a HOG and random forest our baseline scores a 0.994 on a random split but a 0.590 on a drive-grouped split.
+We then determined that the driver-grouped cross-validation was best based on our modifications from this article.
+
+\subsection{Cross-Driver Distracted Driving}
+Zhang et. al\cite{zhangCrossDriver}, we can denote the largest error for consideration in our training set as data leakage, where the same driver is on both sides of the split.
+One noteable change we took out based on this article was ensuring our split protocol avoided this.
+High results for classifications were found due to the fact that there was a testing and training contamination, leading for the model to potentially memorize subject-specific features rather than focus on the distracted driving behaviors.
+However, when splitting drivers by ID, classification performance drops, but accuracy correctly reflects the true corss-subject genralization.
+This is information we took moving forward into developing out model, although we used a split for our drivers, the data we were achiving would generalize more accurately.
+
+\subsection{Anchor-Vit: Spatially-Focused Transformer}
+Doshi\cite{doshiAnchorVIT}, proposes using Anchor-VIT, a vision transformer for distracted driving detection that adds learnable spatial anchors and a Soft Radial Attention (SRA) mechanism to the standard ViT model.
+The anchors are optimized by gradient descent to steer attention toward driver-critical patches, with the SRA uses a Gaussian kernel to strengthen the local interactions and keep global context through a dedicated class token.
+On the SFDD, they used a driver-disjoint 15/5/6 split, allowing the model to read an accuracy of 92.3\%.
+Based on this, we confirmed our prior notions of random frame splitting increases acuracy.
+Using such notion, we created a model combining the confusion loss with pose fusion similar to Doshi's.

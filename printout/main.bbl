@@ -1,9 +1,14 @@
-\begin{thebibliography}{4}
+\begin{thebibliography}{6}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Doshi(2025)]{doshiAnchorVIT}
+Vivan Doshi.
+\newblock Anchor-vit: Spatially-focused vision transformer for distracted driving.
+\newblock \emph{IEEE}, 2025.
 
 \bibitem[Ma et~al.(2024)Ma, Du, Abdelraouf, Han, Gupta, and Wang]{maDigitalTwin2024}
 Yunsheng Ma, Runjia Du, Amr Abdelraouf, Kyungtae Han, Rohit Gupta, and Ziran Wang.
@@ -26,5 +31,10 @@ Hui Xiong and Zhiming Zhang.
 \newblock Design and implementation of a driving behavior monitoring system based on artificall intelligence.
 \newblock \emph{IJAASR}, 5, 2026.
 \newblock Supplied as supplemental material {\tt tr.pdf}.
+
+\bibitem[Zhang et~al.(2016)Zhang, Chen, He, and Zhou]{zhangCrossDriver}
+Yizhou Zhang, Chengming Chen, Zhou He, and Xiaoyi Zhou.
+\newblock Cross-driver distracted driving behavior recognition with directional enhancement and exponential weight smoothing.
+\newblock \emph{MDPI}, 16\penalty0 (7719), 2016.
 
 \end{thebibliography}
