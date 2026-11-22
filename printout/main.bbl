@@ -7,34 +7,42 @@
 
 \bibitem[Doshi(2025)]{doshiAnchorVIT}
 Vivan Doshi.
-\newblock Anchor-vit: Spatially-focused vision transformer for distracted driving.
+\newblock Anchor-vit: Spatially-focused vision transformer for distracted
+  driving.
 \newblock \emph{IEEE}, 2025.
 
-\bibitem[Ma et~al.(2024)Ma, Du, Abdelraouf, Han, Gupta, and Wang]{maDigitalTwin2024}
-Yunsheng Ma, Runjia Du, Amr Abdelraouf, Kyungtae Han, Rohit Gupta, and Ziran Wang.
-\newblock Driver digital twin for online recognition of distracted driving behaviors.
+\bibitem[Ma et~al.(2024)Ma, Du, Abdelraouf, Han, Gupta, and
+  Wang]{maDigitalTwin2024}
+Yunsheng Ma, Runjia Du, Amr Abdelraouf, Kyungtae Han, Rohit Gupta, and Ziran
+  Wang.
+\newblock Driver digital twin for online recognition of distracted driving
+  behaviors.
 \newblock \emph{IEEE TPAMI}, 9, 2024.
-\newblock Face and Gesture submission ID 324. Supplied as supplemental material {\tt fg324.pdf}.
+\newblock Face and Gesture submission ID 324. Supplied as supplemental material
+  {\tt fg324.pdf}.
 
 \bibitem[NHSTA(2026)]{nhstaStats}
 NHSTA.
 \newblock Distracted driving.
 \newblock 2026.
 
-\bibitem[Tran et~al.(2018)Tran, Do, Sheng, Bai, and Chowdhary]{tranDeepLDriving2018}
+\bibitem[Tran et~al.(2018)Tran, Do, Sheng, Bai, and
+  Chowdhary]{tranDeepLDriving2018}
 Duy Tran, Ha~Mahn Do, Weihua Sheng, He Bai, and Girish Chowdhary.
 \newblock Real-time detection of distracted driving based on deep learning.
 \newblock \emph{IET}, 12, 2018.
 
 \bibitem[Xiong and Zhang(2026)]{xiongDrivingBehavior2026}
 Hui Xiong and Zhiming Zhang.
-\newblock Design and implementation of a driving behavior monitoring system based on artificall intelligence.
+\newblock Design and implementation of a driving behavior monitoring system
+  based on artificall intelligence.
 \newblock \emph{IJAASR}, 5, 2026.
 \newblock Supplied as supplemental material {\tt tr.pdf}.
 
 \bibitem[Zhang et~al.(2016)Zhang, Chen, He, and Zhou]{zhangCrossDriver}
 Yizhou Zhang, Chengming Chen, Zhou He, and Xiaoyi Zhou.
-\newblock Cross-driver distracted driving behavior recognition with directional enhancement and exponential weight smoothing.
+\newblock Cross-driver distracted driving behavior recognition with directional
+  enhancement and exponential weight smoothing.
 \newblock \emph{MDPI}, 16\penalty0 (7719), 2016.
 
 \end{thebibliography}
