@@ -1,44 +1,70 @@
 \section{Dataset and Split Protocol}
 \label{sec:data}
+We modeled our original model from a previous submission on Kaggle created by Emmanuel Pintelas, training the model using ResNets and transfer learning. 
+The final accuracy with three epochs was 81.9\%. 
+Between our three memembers, we split modification of the model into error analysis \& split protocol, convolution networks \& saturation, and development of non-neural networks.
 
-% Budget: about 0.6 column-pages. Rubric: split protocol is worth 5 implementation points
-% ("correct unit identified, both splits run, test set used once").
-
-%-------------------------------------------------------------------------
 \subsection{Dataset}
-% Source: distracted_driver.ipynb Section 1, fig01_class_and_driver_balance, fig02_class_examples.
-% 22,424 labeled frames, 26 drivers, 10 classes, one fixed camera, 640x480.
-% Classes are close to balanced but images per driver vary.
-% c1/c3 and c2/c4 differ only by hand, which is why plain horizontal flips corrupt labels.
-% Data use (R12): one sentence that we follow the Kaggle competition rules, do not
-% redistribute images, and checked the rules before showing frames in this paper.
-\TODO{Dataset statistics, class list, and data use statement. Optional small figure of one frame per class.}
+We used the SFDD dataset, which consists of 22,424 labeled camera frames of 26 drivers performing ten different distracted (and safe) activites: safe driving (c0), texting with the right hand(c1), talking on the phoen with the right hand(c2), texting with the left hand(c3), talking on the phone with the left hand(c4), operating the radio (c5), drinking (c6), reaching behind (c7), fixing hair or makeup (c8) and talking to the passenger(c9).
+The ten classes provide nearly balanced data, but the number of frames per driver varies as seen in \cref{fig:leakage}. 
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig01_class_and_driver_balance.png}
+    \caption{Comparison of total SFDD inputted drivers and distraction types}
+    \label{fig:leakage}
+\end{figure*}
+The frame comes from a screenshots from recorded videos that State Farm took and trimmed into images, making some frames near duplicates of others.
+Images are rezied to $224\times244$ and cached.
+For the pose-guided models, a frozen KeyPoint R-CNN extracts nine upper-body keypoints (including nose, ears, shoulders, elbows, and wrists) per frame and detections occur with at least a confidence of 0.5
+
 
 %-------------------------------------------------------------------------
 \subsection{Split Protocol}
-% Source: distracted_driver.ipynb Sections 1 and 6.1 (table_folds.csv).
-% The paragraphs below are the earlier draft. Update them to the final protocol:
-%   unit = driver. 4 drivers frozen by seed (SEED = 42) as the test set, never used for
-%   training, curves or choices. The other 22 development drivers are split with GroupKFold
-%   into 3 driver-disjoint folds. Each final model is trained on all 22 and scored once.
-% If the interim checkpoint declared a different split (the 70/30 split below), say so and
-% say why it changed. A silent change looks like test-set shopping.
-% State explicitly that no model or setting was chosen from test-set numbers.
+Since there are only 26 drivers and each appears several hundred of times in the dataset with near identical frames, the driver rather than the image is the unit we generalize over.
+Every split in this study is maded by the driver, not the frame as the model may pickup on exterior motifs rather than the distracted behavior. 
+Based on results from \cite{maDigitalTwin2024}, we used a 70\% training 30\% test split on our final model.
 
-All data was split based on the provided 26 drivers, using 70\% of the set for training, and the final 30\% for testing validation.
-The split was based on previous industry reports\cite{maDigitalTwin2024} on the best split for their training model and became the basis for ours.
-A random image level split allows any duplicate frames of the same driver taken from the original videos in both the training and testing data for confirmation.
-Using \verb+GroupShuffleSplit+ with \verb+subject+ as the group, 200 candidate seeds with the split seed DEFINE created a held-out fraction near 30\% where all ten classes appear and chosen for performance.
-The final split uses NUMBER drivers for training (15,703 images) and NUMBER drivers for testing (6,721 images) with confirmation that the sets are disjoint.
+\textbf{Frozen test set. }
+Four drivers (p012, p031, p050, and p052; total of 3,011 frames) were chosen by a seeded random draw (seed 42) before any training occured and were set to teh side.
+They are anot apart of any fold, validation curve, tuning decision or model selection.
+Each final model is trained on all 22 ramining development drivers (19,413) frames for a 15 epochs, without any early stopping, and is scored once on the test drivers after the final epoch.
+
+\textbf{Development folds. }
+The 22 development drivers are divided by driver ID into three folds, grouped by cross-validation so each fold can train on 14-15 drivers and validate with the remaining 7-8 not used during training. 
+Each development driver is validated exactly once as well as all ten classes in training and validation.
+Every configuration uses the same fold and the same seed, so all comparison are paired based on their fold.
+A companion study (a five-folded group cross-validation on the same development drivers) uses the same test drivers and confirmation for runs.
+
+\textbf{Leakage and scaling controls. }
+To measure how much a frame-level split overstates accuracy, we trained the baseline on a random stratified split of the development frames (using 2/3 for training and the remaining 1/3 for validation), where frames of the same driver fall on both sides.
+Then, we compare it with the driver-grouped folds and with a single class-complete grouped split (14 trainind drives with 12,946 frames and 8 validation drivers with 6,467 frames).
+In the scaling analysis, the models are trained on 25, 50, 75, and 100\% of the development drivers (5, 11, 15, and 22) and each is scored once on the test drivers.
+
+\textbf{Driver-identity probe. }
+The probe splits frames by action class: it is trained on classes c0-c4 (safe driving, talking, and texting) and is then tested on c5-9 (remainder of distractions).
+Then, the roles are swapped and the two scores are averaged.
+This prevents the probe from matching a frame to the nearest identical frame of the same action.
+Additionally, drivers presented in both of the halves are used.
+
+\textbf{Limitations. }
+With only four test drivers, the absolute test scores are noisy, hence we also report the accuracy per test driver and are relying more on the cross-validation for the ablation claims.
+The full model (with confussion los and pose) had already been scored on these four drivers in teh companion study, so its test results confirms previous results rather than new, independent evidence.
 
 %-------------------------------------------------------------------------
 \subsection{Metrics}
-% Source: table_results_per_fold.csv columns. Defend each choice (R6, results rubric 4 pts).
-%   Macro-F1 as the primary score (balanced classes, but per-class errors differ).
-%   Accuracy for comparison with prior work. Multi-class log-loss, the Kaggle metric,
-%   which also penalizes over-confidence (a calibration signal). ROC-AUC on the test set.
-%   Per-class F1 and confusion matrices to show where errors sit.
-%   Driver-identity probe, a linear classifier that names the held-out driver from frozen
-%   features, compared against chance (1 / number of held-out drivers). It measures the
-%   mechanism, not the task.
-\TODO{Metrics and why each one was chosen.}
+The main metrics we aimed to measure were accuracy and macro-averaged F1--due to the fact that classes are close to balanced, the two metrics go hand in hand and can easily show patterns.
+Additionally, metrics are included for macro precision and recall. The side by side comparison can be denoted in \cref{fig:ablation}.
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{figures/fig06_ablation_metrics.png}
+    \caption{Accuracy, macro F1, and log-loss compared to the several models for testing.}
+    \label{fig:ablation}
+\end{figure*}
+Macro-averaged one vs rest ROC-AUC computed from the predicted probabilites and multiclass log-loss, which is the main metric required for the Kaggle competition.
+Log-loss matters here because accuracy is nearly saturated on all the test drives, while log-loss separates models by how confident and well calibrated they are.
+Cross-validation results are the mean $\pm$ standard deviation across folds.
+Differences between the configurations are computed and paired based on their fold, same as to the held-out drivers.
+The compansion studdy adds 95\% intervals on the paired differences. 
+Frozen-test results come from a single run per configuration, with accuracy per tset driver
+Measuring how much driver identity remains in the learned function, we also denoted the accuracy of a linear driver probe: a standardized logisitc refresion ($C=0.1$, at most 200 iterations) fittion on the 512-dimensional pooled visual features of the held out frames using the class split protocol.
+Chance levels were 0.137 on the held-out development drivers and 0.25 on the four test drivers.
