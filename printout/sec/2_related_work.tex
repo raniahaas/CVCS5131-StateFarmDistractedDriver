@@ -8,8 +8,8 @@ Each participant read numberous articles and summarized the teams' results.
 
 Ma et. al\cite{maDigitalTwin2024} used a driver digital twin framework for online recognition of distracted driving.
 It paired a transformer-based module for recognizing driver actions with temporal localization modules that detects teh distracted behaviors.
-They reported state-of-the-art results on both tasks (in 2024), with 6.5\% higher on SFDD (State Farm Distracted Driver).
-Since SFDD is the same set we use, this was a great starting point for our group.
+They reported state-of-the-art results on both tasks (in 2024), with 6.5\% higher on SFDDD.
+Since SFDDD is the same set we use, this was a great starting point for our group.
 Taking inspiration from their multi-task scheme, our model also uses a secon signal alongside teh image, taking in upper-body prose keypoints as inputs and a driver identity head as an aversary.
 Although our goals differ, it still improved our action recognition with a strong architecture and an auxiliary task.
 Since we used a similar but smaller ResNet, our numbers were limited in comparison to theirs.
@@ -36,6 +36,6 @@ This is information we took moving forward into developing out model, although w
 \subsection{Anchor-Vit: Spatially-Focused Transformer}
 Doshi\cite{doshiAnchorVIT}, proposes using Anchor-VIT, a vision transformer for distracted driving detection that adds learnable spatial anchors and a Soft Radial Attention (SRA) mechanism to the standard ViT model.
 The anchors are optimized by gradient descent to steer attention toward driver-critical patches, with the SRA uses a Gaussian kernel to strengthen the local interactions and keep global context through a dedicated class token.
-On the SFDD, they used a driver-disjoint 15/5/6 split, allowing the model to read an accuracy of 92.3\%.
+On SFDDD, they used a driver-disjoint 15/5/6 split, allowing the model to read an accuracy of 92.3\%.
 Based on this, we confirmed our prior notions of random frame splitting increases acuracy.
 Using such notion, we created a model combining the confusion loss with pose fusion similar to Doshi's.

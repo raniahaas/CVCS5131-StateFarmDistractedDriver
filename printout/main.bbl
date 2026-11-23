@@ -1,40 +1,152 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
+\bibitem[Alvi et~al.(2018)Alvi, Zisserman, and Nell{\aa}ker]{alvi2018turning}
+Mohsan Alvi, Andrew Zisserman, and Christoffer Nell{\aa}ker.
+\newblock Turning a blind eye: Explicit removal of biases and variation from
+  deep neural network embeddings.
+\newblock In \emph{ECCV Workshops}, pages 556--572, 2018.
+
+\bibitem[Breiman(2001)]{breiman2001rf}
+Leo Breiman.
+\newblock Random forests.
+\newblock \emph{Machine Learning}, 45\penalty0 (1):\penalty0 5--32, 2001.
+
+\bibitem[Celona et~al.(2026)Celona, Bianco, and Napoletano]{celona2026dbmnet}
+Luigi Celona, Simone Bianco, and Paolo Napoletano.
+\newblock Cross-camera distracted driver classification through feature
+  disentanglement and contrastive learning.
+\newblock \emph{IEEE Trans. Intell. Transp. Syst.}, 27\penalty0 (5), 2026.
+
+\bibitem[Dalal and Triggs(2005)]{dalal2005hog}
+Navneet Dalal and Bill Triggs.
+\newblock Histograms of oriented gradients for human detection.
+\newblock In \emph{CVPR}, pages 886--893, 2005.
+
 \bibitem[Doshi(2025)]{doshiAnchorVIT}
 Vivan Doshi.
-\newblock Anchor-vit: Spatially-focused vision transformer for distracted driving.
-\newblock \emph{IEEE}, 2025.
+\newblock {Anchor-ViT}: Spatially-focused vision transformer for distracted
+  driving detection.
+\newblock In \emph{ICIP}, 2025.
 
-\bibitem[Ma et~al.(2024)Ma, Du, Abdelraouf, Han, Gupta, and Wang]{maDigitalTwin2024}
-Yunsheng Ma, Runjia Du, Amr Abdelraouf, Kyungtae Han, Rohit Gupta, and Ziran Wang.
-\newblock Driver digital twin for online recognition of distracted driving behaviors.
+\bibitem[Essahraui et~al.(2026)Essahraui, Rami, Makkaoui, and
+  Ouahbi]{essahraui2026}
+Siham Essahraui, Chaymae Rami, Khalid~El Makkaoui, and Ibrahim Ouahbi.
+\newblock A lightweight deep learning model for real-time in-vehicle driver
+  distraction detection with low-latency inference.
+\newblock \emph{Scientific Reports}, 16:\penalty0 32747, 2026.
+
+\bibitem[Ganin et~al.(2016)Ganin, Ustinova, Ajakan, Germain, Larochelle,
+  Laviolette, Marchand, and Lempitsky]{ganin2016dann}
+Yaroslav Ganin, Evgeniya Ustinova, Hana Ajakan, Pascal Germain, Hugo
+  Larochelle, Fran{\c{c}}ois Laviolette, Mario Marchand, and Victor Lempitsky.
+\newblock Domain-adversarial training of neural networks.
+\newblock \emph{JMLR}, 17\penalty0 (59):\penalty0 1--35, 2016.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{he2016resnet}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{CVPR}, pages 770--778, 2016.
+
+\bibitem[He et~al.(2017)He, Gkioxari, Doll{\'a}r, and Girshick]{he2017maskrcnn}
+Kaiming He, Georgia Gkioxari, Piotr Doll{\'a}r, and Ross Girshick.
+\newblock Mask {R-CNN}.
+\newblock In \emph{ICCV}, pages 2961--2969, 2017.
+
+\bibitem[Hssayeni et~al.(2017)Hssayeni, Saxena, Ptucha, and
+  Savakis]{hssayeni2017}
+Murtadha~D. Hssayeni, Sagar Saxena, Raymond Ptucha, and Andreas Savakis.
+\newblock Distracted driver detection: Deep learning vs handcrafted features.
+\newblock In \emph{IS\&T Electronic Imaging, Imaging and Multimedia Analytics
+  in a Web and Mobile World}, 2017.
+
+\bibitem[Loshchilov and Hutter(2019)]{loshchilovAdamW2019}
+Ilya Loshchilov and Frank Hutter.
+\newblock Decoupled weight decay regularization.
+\newblock In \emph{ICLR}, 2019.
+
+\bibitem[Ma and Wang(2024)]{ma2024vitdd}
+Yunsheng Ma and Ziran Wang.
+\newblock {ViT-DD}: Multi-task vision transformer for semi-supervised driver
+  distraction detection.
+\newblock \emph{arXiv preprint arXiv:2209.09178}, 2024.
+
+\bibitem[Ma et~al.(2024)Ma, Du, Abdelraouf, Han, Gupta, and
+  Wang]{maDigitalTwin2024}
+Yunsheng Ma, Runjia Du, Amr Abdelraouf, Kyungtae Han, Rohit Gupta, and Ziran
+  Wang.
+\newblock Driver digital twin for online recognition of distracted driving
+  behaviors.
 \newblock \emph{IEEE TPAMI}, 9, 2024.
-\newblock Face and Gesture submission ID 324. Supplied as supplemental material {\tt fg324.pdf}.
+\newblock Face and Gesture submission ID 324. Supplied as supplemental material
+  {\tt fg324.pdf}.
+
+\bibitem[Mittal and Verma(2023)]{mittal2023catcaps}
+Himanshu Mittal and Bindu Verma.
+\newblock {CAT-CapsNet}: A convolutional and attention based capsule network to
+  detect the driver's distraction.
+\newblock \emph{IEEE Trans. Intell. Transp. Syst.}, 24\penalty0 (9):\penalty0
+  9561--9570, 2023.
 
 \bibitem[NHSTA(2026)]{nhstaStats}
 NHSTA.
 \newblock Distracted driving.
 \newblock 2026.
 
-\bibitem[Tran et~al.(2018)Tran, Do, Sheng, Bai, and Chowdhary]{tranDeepLDriving2018}
+\bibitem[Pintelas({\natexlab{a}})]{pintelasLab6}
+Emmanuel Pintelas.
+\newblock Image-based {ML} master: Vision classification ({Lab} 6).
+\newblock Kaggle notebook,
+  \url{https://www.kaggle.com/code/emmanuelpintelas/image-based-ml-master-vision-classification},
+  {\natexlab{a}}.
+
+\bibitem[Pintelas({\natexlab{b}})]{pintelasLab7}
+Emmanuel Pintelas.
+\newblock Lec 9, {ML} {Lab} 7: Transfer learning with residual networks.
+\newblock Kaggle notebook, {\natexlab{b}}.
+
+\bibitem[Russakovsky et~al.(2015)Russakovsky, Deng, Su, Krause, Satheesh, Ma,
+  Huang, Karpathy, Khosla, Bernstein, Berg, and
+  Fei-Fei]{russakovskyImageNet2015}
+Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, Sanjeev Satheesh, Sean Ma,
+  Zhiheng Huang, Andrej Karpathy, Aditya Khosla, Michael Bernstein,
+  Alexander~C. Berg, and Li Fei-Fei.
+\newblock {ImageNet} large scale visual recognition challenge.
+\newblock \emph{IJCV}, 115\penalty0 (3):\penalty0 211--252, 2015.
+
+\bibitem[Smith and Topin(2019)]{smithSuperconvergence2019}
+Leslie~N. Smith and Nicholay Topin.
+\newblock Super-convergence: Very fast training of neural networks using large
+  learning rates.
+\newblock In \emph{Proc. SPIE}, 2019.
+
+\bibitem[Tran et~al.(2018)Tran, Do, Sheng, Bai, and
+  Chowdhary]{tranDeepLDriving2018}
 Duy Tran, Ha~Mahn Do, Weihua Sheng, He Bai, and Girish Chowdhary.
 \newblock Real-time detection of distracted driving based on deep learning.
 \newblock \emph{IET}, 12, 2018.
 
+\bibitem[Tzeng et~al.(2015)Tzeng, Hoffman, Darrell, and
+  Saenko]{tzeng2015confusion}
+Eric Tzeng, Judy Hoffman, Trevor Darrell, and Kate Saenko.
+\newblock Simultaneous deep transfer across domains and tasks.
+\newblock In \emph{ICCV}, pages 4068--4076, 2015.
+
 \bibitem[Xiong and Zhang(2026)]{xiongDrivingBehavior2026}
 Hui Xiong and Zhiming Zhang.
-\newblock Design and implementation of a driving behavior monitoring system based on artificall intelligence.
+\newblock Design and implementation of a driving behavior monitoring system
+  based on artificall intelligence.
 \newblock \emph{IJAASR}, 5, 2026.
 \newblock Supplied as supplemental material {\tt tr.pdf}.
 
-\bibitem[Zhang et~al.(2016)Zhang, Chen, He, and Zhou]{zhangCrossDriver}
-Yizhou Zhang, Chengming Chen, Zhou He, and Xiaoyi Zhou.
-\newblock Cross-driver distracted driving behavior recognition with directional enhancement and exponential weight smoothing.
-\newblock \emph{MDPI}, 16\penalty0 (7719), 2016.
+\bibitem[Zhang et~al.(2026)Zhang, Chen, He, and Zhou]{zhangCrossDriver}
+Yizhuo Zhang, Chengming Chen, Zhuo He, and Xiaoyi Zhou.
+\newblock Cross-driver distracted driving behavior recognition with directional
+  enhancement and exponential weight smoothing.
+\newblock \emph{Applied Sciences}, 16\penalty0 (15):\penalty0 7719, 2026.
 
 \end{thebibliography}

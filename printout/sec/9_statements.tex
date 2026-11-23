@@ -8,6 +8,16 @@
 % CPU hours for the classical models.
 \TODO{Repository link, environment, seeds, hardware, and GPU-hours.}
 
+\section*{Codebase and Attribution}
+
+Early data-loading and ResNet fine-tuning boilerplate referenced two Kaggle
+educational notebooks for this competition~\cite{pintelasLab6,pintelasLab7}.
+The pipeline evaluated in this paper was rewritten from scratch on top of
+\texttt{torchvision} model architectures and pretrained weights, including the
+driver-disjoint split protocol, classical and pose-based baselines,
+body-centered pose fusion, domain-adversarial heads (gradient reversal and
+uniform confusion loss), identity probes, and scaling and error analyses.
+
 \section*{AI Tool Disclosure}
 % R11. Required. Omitting it counts as academic dishonesty. Name the tools and what they were
 % used for (code, debugging, writing or editing text, figures). Keep it factual.

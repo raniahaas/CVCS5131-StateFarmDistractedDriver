@@ -1,18 +1,16 @@
-"""Draw the model-only figure: what each stage sees and how gradient reversal hides the driver.
+"""Draw the architecture figure of the final model: learn what the driver does, not who they are.
 
 Usage:
-    uv run python figures/make_model_figure.py [output_dir]
+    uv run python -m figures.make_model_figure [output_dir]
 
-Needs ``figures/assets/overview_assets.npz`` (keypoints, Grad-CAM; from make_overview_assets.py)
-and ``figures/assets/model_assets.npz`` (stage feature maps; from make_model_assets.py), plus the
-saved results in ``outputs-old/``. Writes ``model.pdf`` (vector) and ``model.png`` (300 dpi).
-Canvas is 100 x 40 units and the figure has the same ratio, so circles stay round.
+Needs ``figures/assets/model_assets.npz`` from ``make_model_assets.py``, so every picture, bar and
+number in the figure is a real output of the final model F-I on one frame of an unseen test driver.
+Writes ``model.pdf`` (vector) and ``model.png`` (300 dpi). The canvas is 100 x 40 units with the
+same aspect ratio as the figure, so circles stay round.
 """
 
-import csv
-import math
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from itertools import pairwise
 from pathlib import Path
 
@@ -21,83 +19,71 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.axes import Axes
 from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Rectangle
-from PIL import Image, ImageOps
+from PIL import Image
+
+from figures.make_model_assets import FRAME_PATH, TRUE_CLASS
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
-FRAME_PATH = (
-    ROOT
-    / "data"
-    / "state-farm-distracted-driver-detection"
-    / "imgs"
-    / "train"
-    / "c2"
-    / "img_42941.jpg"
-)
-HISTORY_CSV = ROOT / "outputs-old" / "figures" / "fig12_adversarial_identity_removal_history.csv"
 
-INK = "#222222"
-MUTED = "#6B6B6B"
-NEUTRAL = ("#E9EEF5", "#4C6A92")
-FLIP = ("#DDF1EA", "#1B7F63")
-ADV = ("#E7E5F4", "#5B54A6")
-POSE = ("#FCE8D6", "#C2570C")
-BAD = ("#FBE3E1", "#B3261E")
-LOSS = ("#F1F1F1", "#555555")
-FLIP_PERM: list[int] = [0, 2, 1, 4, 3, 6, 5, 8, 7]  # left/right joint swap used when mirroring
+INK = "#1F2328"
+MUTED = "#6B7280"
+WHAT = ("#E6EEF8", "#2563A8")  # action path (fill, edge)
+WHO = ("#FBE6E3", "#C0392B")  # driver identity
+POSE = ("#FDEBD9", "#D9730D")
+HIDE = "#6A4C93"  # gradient that removes identity from the backbone
+BAND = ("#FAF7F7", "#D9C9C7")
 LIMBS: list[tuple[int, int]] = [(0, 1), (0, 2), (3, 4), (3, 5), (5, 7), (4, 6), (6, 8)]
-
-W, H = 100.0, 40.0
-fig, ax = plt.subplots(figsize=(7.2, 7.2 * H / W))
-ax.set_xlim(0, W)
-ax.set_ylim(0, H)
-ax.axis("off")
+CLASS_SHORT: list[str] = [
+    "safe driving",
+    "texting, right",
+    "phone, right",
+    "texting, left",
+    "phone, left",
+    "radio",
+    "drinking",
+    "reaching behind",
+    "hair, makeup",
+    "passenger",
+]
+TIMES, ARROW = chr(0xD7), chr(0x2192)  # code points keep the source ASCII
 
 Point = tuple[float, float]
+LineStyle = str | tuple[float, tuple[float, float]]
 
-
-def box(
-    x: float,
-    y: float,
-    w: float,
-    h: float,
-    label: str,
-    colors: tuple[str, str],
-    fs: float = 5.4,
-    bold: bool = False,
-    ls: str | tuple[int, tuple[int, int]] = "-",
-    z: int = 2,
-) -> None:
-    """Draw a rounded, labeled box with its bottom-left corner at (x, y)."""
-    ax.add_patch(
-        FancyBboxPatch(
-            (x, y),
-            w,
-            h,
-            boxstyle="round,pad=0,rounding_size=0.8",
-            fc=colors[0],
-            ec=colors[1],
-            lw=0.9,
-            ls=ls,
-            zorder=z,
-        )
-    )
-    if label:
-        text(x + w / 2, y + h / 2, label, fs=fs, bold=bold)
+W, H, Y0 = 100.0, 40.0, 14.4  # Y0 crops the empty canvas below the training band
+plt.rcParams["font.family"] = "DejaVu Sans"
+plt.rcParams["mathtext.fontset"] = "dejavusans"
+fig, ax = plt.subplots(figsize=(7.0, 7.0 * (H - Y0) / W))
+fig.subplots_adjust(0, 0, 1, 1)
+ax.set_xlim(0, W)
+ax.set_ylim(Y0, H)
+ax.axis("off")
 
 
 def text(
     x: float,
     y: float,
     s: str,
-    fs: float = 5.0,
+    fs: float = 5.6,
     color: str = INK,
     ha: str = "center",
     bold: bool = False,
     italic: bool = False,
 ) -> None:
-    """Place a text label centered vertically on (x, y)."""
+    """Place a label centered vertically on (x, y).
+
+    Args:
+        x: Anchor x in canvas units.
+        y: Anchor y in canvas units.
+        s: Label, may contain mathtext.
+        fs: Font size in points.
+        color: Text color.
+        ha: Horizontal alignment.
+        bold: Use a bold weight.
+        italic: Use an italic style.
+    """
     ax.text(
         x,
         y,
@@ -109,280 +95,356 @@ def text(
         fontweight="bold" if bold else "normal",
         style="italic" if italic else "normal",
         linespacing=1.15,
-        zorder=6,
+        zorder=8,
     )
 
 
-def arrow(
-    pts: list[Point],
-    color: str = INK,
+def box(
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    colors: tuple[str, str],
+    label: str = "",
+    fs: float = 5.8,
+    bold: bool = False,
+    ls: LineStyle = "-",
     lw: float = 0.9,
-    ls: str | tuple[int, tuple[float, float]] = "-",
+    z: int = 2,
 ) -> None:
-    """Draw a polyline through ``pts`` with an arrow head on its last segment."""
-    for a, b in pairwise(pts[:-1]):
-        ax.plot(
-            [a[0], b[0]], [a[1], b[1]], color=color, lw=lw, ls=ls, zorder=4, solid_capstyle="butt"
+    """Draw a rounded box with its bottom-left corner at (x, y) and an optional centered label.
+
+    Args:
+        x: Left edge.
+        y: Bottom edge.
+        w: Width.
+        h: Height.
+        colors: Fill and edge color.
+        label: Centered text.
+        fs: Font size of the label.
+        bold: Bold label.
+        ls: Edge line style.
+        lw: Edge line width.
+        z: Drawing order.
+    """
+    ax.add_patch(
+        FancyBboxPatch(
+            (x, y),
+            w,
+            h,
+            boxstyle="round,pad=0,rounding_size=0.9",
+            fc=colors[0],
+            ec=colors[1],
+            lw=lw,
+            ls=ls,
+            zorder=z,
         )
+    )
+    if label:
+        text(x + w / 2, y + h / 2, label, fs=fs, bold=bold)
+
+
+def arrow(pts: Sequence[Point], color: str = INK, lw: float = 0.9, ls: LineStyle = "-") -> None:
+    """Draw a polyline through ``pts`` with an arrow head on its last segment.
+
+    Args:
+        pts: Corner points, at least two.
+        color: Line color.
+        lw: Line width.
+        ls: Line style.
+    """
+    for a, b in pairwise(pts[:-1]):
+        ax.plot([a[0], b[0]], [a[1], b[1]], color=color, lw=lw, ls=ls, zorder=5)
     ax.add_patch(
         FancyArrowPatch(
             pts[-2],
             pts[-1],
             arrowstyle="-|>",
-            mutation_scale=6,
+            mutation_scale=6.5,
             color=color,
             lw=lw,
             ls=ls,
             shrinkA=0,
             shrinkB=0,
-            zorder=4,
+            zorder=5,
         )
     )
 
 
-def badge(x: float, y: float, n: str, color: str) -> None:
-    """Draw a numbered circle marking one of the three ingredients."""
-    ax.add_patch(Circle((x, y), 1.2, fc=color, ec="white", lw=0.7, zorder=7))
-    ax.text(
-        x, y, n, fontsize=5.4, color="white", fontweight="bold", ha="center", va="center", zorder=8
-    )
-
-
 def photo(
-    x: float, y: float, w: float, h: float, image: Image.Image, border: str = MUTED
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+    image: Image.Image,
+    border: str = MUTED,
+    lw: float = 0.8,
 ) -> Callable[[float, float], Point]:
-    """Draw an image cropped to the box aspect ratio and return a pixel-to-canvas mapper."""
+    """Draw an image center-cropped to the box aspect ratio.
+
+    Args:
+        x: Left edge.
+        y: Bottom edge.
+        w: Width.
+        h: Height.
+        image: Image to draw.
+        border: Frame color.
+        lw: Frame line width.
+
+    Returns:
+        A function that maps pixel coordinates of ``image`` to canvas coordinates.
+    """
     iw, ih = image.size
-    crop_w = min(iw, round(ih * w / h))
-    left = (iw - crop_w) // 2
+    crop_w, crop_h = min(iw, round(ih * w / h)), min(ih, round(iw * h / w))
+    left, top = (iw - crop_w) // 2, (ih - crop_h) // 2
     ax.imshow(
-        image.crop((left, 0, left + crop_w, ih)),
+        image.crop((left, top, left + crop_w, top + crop_h)),
         extent=(x, x + w, y, y + h),
         zorder=3,
         interpolation="lanczos",
         aspect="auto",
     )
-    ax.add_patch(Rectangle((x, y), w, h, fc="none", ec=border, lw=0.8, zorder=4))
-    return lambda px, py: (x + (px - left) / crop_w * w, y + h - py / ih * h)
+    ax.add_patch(Rectangle((x, y), w, h, fc="none", ec=border, lw=lw, zorder=4))
+    return lambda px, py: (x + (px - left) / crop_w * w, y + h - (py - top) / crop_h * h)
 
 
-def skeleton(
-    keypoints: np.ndarray, size: tuple[int, int], to_canvas: Callable[[float, float], Point]
-) -> None:
-    """Draw upper-body keypoints and limbs on a photo."""
-    pts = [to_canvas(kx * size[0], ky * size[1]) for kx, ky in keypoints]
+def skeleton(pts: Sequence[Point], dot: float = 6.0) -> None:
+    """Draw upper-body joints and limbs at canvas points ``pts``.
+
+    Args:
+        pts: Nine canvas points in keypoint order.
+        dot: Marker area in points squared.
+    """
     for a, b in LIMBS:
-        ax.plot(*zip(pts[a], pts[b], strict=True), color="#FFD400", lw=0.9, zorder=5)
+        ax.plot(*zip(pts[a], pts[b], strict=True), color="#FFC300", lw=1.0, zorder=6)
     xs, ys = zip(*pts, strict=True)
-    ax.scatter(xs, ys, s=7, c=POSE[1], edgecolors="white", linewidths=0.4, zorder=6)
+    ax.scatter(xs, ys, s=dot, c=POSE[1], edgecolors="white", linewidths=0.4, zorder=7)
 
 
-def feature_bar(x: float, y: float, h: float, colors: tuple[str, str]) -> None:
-    """Draw a feature vector as a thin segmented bar."""
-    n = 8
-    for i in range(n):
-        shade = 0.35 + 0.5 * ((i * 5) % n) / n
+def feature_bar(x: float, y: float, h: float, color: str, seed: int) -> None:
+    """Draw a feature vector as a column of shaded cells.
+
+    Args:
+        x: Left edge.
+        y: Bottom edge.
+        h: Height.
+        color: Cell color.
+        seed: Seed for the cell shades, so each vector looks different.
+    """
+    shades = np.random.default_rng(seed).uniform(0.25, 0.95, 9)
+    for i, alpha in enumerate(shades):
         ax.add_patch(
             Rectangle(
-                (x, y + i * h / n),
-                2.5,
-                h / n,
-                fc=colors[1],
-                alpha=shade,
-                ec="white",
-                lw=0.3,
-                zorder=3,
+                (x, y + i * h / 9), 2.4, h / 9, fc=color, alpha=alpha, ec="white", lw=0.3, zorder=3
             )
         )
-    ax.add_patch(Rectangle((x, y), 2.5, h, fc="none", ec=colors[1], lw=0.8, zorder=4))
+    ax.add_patch(Rectangle((x, y), 2.4, h, fc="none", ec=color, lw=0.8, zorder=4))
 
 
-def load_history() -> dict[str, dict[str, list[float]]]:
-    """Read per-epoch probe accuracy and driver-head loss for both runs of the removal study.
+def pill(x: float, y: float, s: str, colors: tuple[str, str], fs: float = 5.2) -> None:
+    """Draw a small rounded tag with white bold text centered on (x, y).
+
+    Args:
+        x: Center x.
+        y: Center y.
+        s: Tag text.
+        colors: Unused fill and the tag color.
+        fs: Font size.
+    """
+    ax.text(
+        x,
+        y,
+        s,
+        fontsize=fs,
+        color="white",
+        ha="center",
+        va="center",
+        fontweight="bold",
+        zorder=9,
+        bbox={"boxstyle": "round,pad=0.28,rounding_size=0.6", "fc": colors[1], "ec": "none"},
+    )
+
+
+def keypoint_crop(
+    image: Image.Image, kps: np.ndarray, aspect: float
+) -> tuple[Image.Image, int, int]:
+    """Crop the frame around the detected joints with a margin, at a fixed aspect ratio.
+
+    Args:
+        image: Full frame.
+        kps: Keypoints [9, 2] in [0, 1] image coordinates.
+        aspect: Width over height of the crop.
 
     Returns:
-        Mapping model name to {"probe": [...], "adv_loss": [...]} (adv_loss only has values with
-        the adversary).
+        The crop and the pixel offset (left, top) of the crop in the frame.
     """
-    out: dict[str, dict[str, list[float]]] = {}
-    with open(HISTORY_CSV, newline="") as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        probe_col, loss_col = header.index("probe_acc"), header.index("adv_loss")
-        for row in reader:
-            entry = out.setdefault(row[0], {"probe": [], "adv_loss": []})
-            entry["probe"].append(float(row[probe_col]))
-            if row[loss_col]:
-                entry["adv_loss"].append(float(row[loss_col]))
-    return out
+    iw, ih = image.size
+    px = kps * np.array([iw, ih])
+    cx, cy = px.mean(axis=0)
+    h = min(ih, (np.ptp(px[:, 1]) + np.ptp(px[:, 0]) / aspect) * 0.9)
+    w = h * aspect
+    left = int(np.clip(cx - w / 2, 0, iw - w))
+    top = int(np.clip(cy - h / 2, 0, ih - h))
+    return image.crop((left, top, left + int(w), top + int(h))), left, top
 
 
-overview = np.load(HERE / "assets" / "overview_assets.npz")
-model = np.load(HERE / "assets" / "model_assets.npz")
-history = load_history()
-k_drivers = int(model["k_drivers"])
-with_adv = history["With adversary"]
-frame = Image.open(FRAME_PATH).convert("RGB")
-mirrored = ImageOps.mirror(frame)
-kp = overview["kps"][0]
-kp_mirrored = kp[FLIP_PERM].copy()
-kp_mirrored[:, 0] = 1 - kp_mirrored[:, 0]  # same transform the notebook applies when it flips
+def class_bars(probs: np.ndarray, x: float, y: float, w: float, h: float) -> None:
+    """Draw the 10 class probabilities as horizontal bars, the true class highlighted.
 
-# ------------------------------------------------------------ identity-removal band (bottom)
-ax.add_patch(
-    FancyBboxPatch(
-        (0.4, 1.2),
-        99.2,
-        13.4,
-        boxstyle="round,pad=0,rounding_size=1.0",
-        fc="#FBF7F7",
-        ec="#E6D6D4",
-        lw=0.7,
-        zorder=0,
-    )
-)
-badge(1.9, 13.2, "2", ADV[1])
-text(
-    3.6,
-    13.2,
-    "Gradient reversal layer (GRL), training only",
-    fs=5.4,
-    ha="left",
-    bold=True,
-    color=ADV[1],
-)
-
-# ------------------------------------------------------------ inputs
-photo(0.5, 17.5, 10.6, 8.0, frame)
-ax.text(
-    1.0,
-    18.4,
-    "frame",
-    fontsize=4.4,
-    color=INK,
-    zorder=6,
-    bbox={"fc": "white", "ec": "none", "pad": 0.6, "alpha": 0.85},
-)
-to_canvas = photo(0.5, 28.5, 10.6, 8.0, frame, border=POSE[1])
-skeleton(kp, frame.size, to_canvas)
-arrow([(2.2, 25.7), (2.2, 28.3)], lw=0.8)
-text(3.0, 27.1, "Keypoint R-CNN", fs=4.0, color=POSE[1], ha="left", bold=True)
-
-# ------------------------------------------------------------ 1: semantic flip
-box(14.8, 15.4, 13.0, 24.0, "", FLIP, z=1)
-badge(16.4, 38.2, "1", FLIP[1])
-text(17.9, 38.2, "Semantic flip", fs=4.6, ha="left", bold=True, color=FLIP[1])
-to_canvas = photo(16.1, 28.5, 10.4, 7.8, mirrored)
-skeleton(kp_mirrored, frame.size, to_canvas)
-photo(16.1, 17.5, 10.4, 7.8, mirrored)
-text(21.3, 26.9, "label  c2 → c4", fs=4.6, bold=True, color=FLIP[1])
-arrow([(11.1, 21.5), (16.1, 21.5)])
-arrow([(11.1, 32.4), (16.1, 32.4)])
-
-# ------------------------------------------------------------ 3: pose stream (top lane)
-text(37.4, 34.3, "9 joints + flag (19-d)", fs=4.4, color=POSE[1])
-arrow([(26.5, 32.4), (47.0, 32.4)], color=POSE[1])
-box(47.0, 30.3, 11.0, 4.2, "Pose MLP\n19 → 64 → 64", POSE, fs=4.8)
-badge(47.0, 34.5, "3", POSE[1])
-arrow([(58.0, 32.4), (60.4, 32.4)])
-feature_bar(60.4, 29.7, 5.4, POSE)
-text(61.65, 36.5, "f_pose", fs=4.2, color=POSE[1])
-
-# ------------------------------------------------------------ ResNet stages (bottom lane)
-text(
-    43.6,
-    27.0,
-    "ResNet-18 stages, fine texture to coarse parts",
-    fs=4.6,
-    bold=True,
-    color=NEUTRAL[1],
-)
-arrow([(26.5, 21.5), (29.2, 21.5)])
-TIMES, MINUS = chr(0xD7), chr(0x2212)  # built from code points to keep the source ASCII-safe
-labels = [f"layer {i + 1}\n{n}{TIMES}{n}" for i, n in enumerate([56, 28, 14, 7])]
-for i in range(4):
-    x = 29.2 + i * 7.6
-    photo(x, 18.5, 6.0, 6.0, Image.fromarray(model[f"stage{i + 1}"]), border=NEUTRAL[1])
-    text(x + 3.0, 16.9, labels[i], fs=3.8, color=MUTED)
-    if i < 3:
-        arrow([(x + 6.0, 21.5), (x + 7.6, 21.5)], lw=0.7)
-arrow([(58.0, 21.5), (60.4, 21.5)])
-feature_bar(60.4, 18.5, 6.0, NEUTRAL)
-text(61.65, 25.5, "f_vis", fs=4.2, color=NEUTRAL[1])
-
-# ------------------------------------------------------------ fuse and classify
-box(65.4, 24.2, 5.4, 6.6, "concat", NEUTRAL, fs=4.6)
-arrow([(62.9, 32.4), (68.1, 32.4), (68.1, 30.8)])
-arrow([(62.9, 21.5), (68.1, 21.5), (68.1, 24.2)])
-box(73.5, 24.7, 10.0, 5.6, "What?\n10 actions", NEUTRAL, fs=5.0, bold=True)
-arrow([(70.8, 27.5), (73.5, 27.5)])
-box(73.5, 33.2, 10.0, 2.8, "L_class", LOSS, fs=4.6)
-arrow([(78.5, 30.3), (78.5, 33.2)])
-arrow([(83.5, 27.5), (86.5, 27.5)], color=MUTED, ls=(0, (2, 1.5)))
-photo(
-    86.5,
-    23.7,
-    10.0,
-    7.6,
-    Image.fromarray(
-        np.uint8(
-            np.asarray(Image.open(FRAME_PATH).convert("RGB").resize((224, 224))) * 0.5
-            + plt.get_cmap("jet")(overview["cam_adversary"][0])[..., :3] * 255 * 0.5
+    Args:
+        probs: Softmax output [10].
+        x: Left edge of the bar area (labels sit to its left).
+        y: Bottom edge.
+        w: Width for a probability of 1.
+        h: Total height.
+    """
+    row = h / len(probs)
+    for i, p in enumerate(probs):
+        cy = y + h - (i + 0.5) * row
+        hit = i == TRUE_CLASS
+        ax.add_patch(
+            Rectangle((x, cy - row * 0.32), w, row * 0.64, fc="#EEF0F3", ec="none", zorder=2)
         )
-    ),
-)
-text(91.5, 22.0, "Grad-CAM\nwhere it looks", fs=4.0, bold=True)
+        ax.add_patch(
+            Rectangle(
+                (x, cy - row * 0.32), max(p * w, 0.15), row * 0.64,
+                fc=WHAT[1] if hit else "#9AA3AE", ec="none", zorder=3,
+            )
+        )  # fmt: skip
+        text(
+            x - 0.6,
+            cy,
+            f"c{i} {CLASS_SHORT[i]}",
+            fs=4.9,
+            ha="right",
+            bold=hit,
+            color=INK if hit else MUTED,
+        )
+        if hit:
+            text(x + p * w - 0.5, cy, f"{p:.1%}", fs=5.0, ha="right", bold=True, color="white")
+            continue
+        # Small bars are too short to hold their label, so it goes just past the bar's end.
+        label = "<0.1%" if p < 0.0005 else f"{p:.1%}"
+        text(x + max(p * w, 0.15) + 0.5, cy, label, fs=4.6, ha="left", color=MUTED)
 
-# ------------------------------------------------------------ gradient reversal layer (GRL)
-GREEN = "#2E7D32"
-arrow([(61.65, 18.5), (61.65, 13.4)], color=ADV[1])
-box(56.2, 8.6, 10.6, 4.8, "GRL\nbackward \u00d7(\u2212\u03bb)", ADV, fs=4.4, bold=True)
-box(70.6, 8.6, 13.0, 4.8, "Driver head\n512\u2192256\u2192K", BAD, fs=4.2)
-box(86.5, 8.6, 10.0, 4.8, "L_driver\n(wrong guesses)", LOSS, fs=4.2)
-# Forward lane (top): features flow right. Backward lane (bottom): gradients flow left.
-arrow([(66.8, 12.0), (70.6, 12.0)], color=ADV[1])
-arrow([(83.6, 12.0), (86.5, 12.0)], color=ADV[1])
-arrow([(86.5, 9.8), (83.6, 9.8)], color=MUTED, ls=(0, (2.5, 1.5)))
-arrow([(70.6, 9.8), (66.8, 9.8)], color=GREEN, lw=1.1, ls=(0, (2.5, 1.5)))
-ax.plot([29.2, 58.0], [15.5, 15.5], color=BAD[1], lw=0.7, zorder=3)
-arrow([(56.2, 9.8), (43.6, 9.8), (43.6, 15.3)], color=BAD[1], lw=1.2, ls=(0, (2.5, 1.5)))
 
-# Legend that explains the three arrow styles in plain words.
-legend = [
-    (
-        ADV[1],
-        "-",
-        "Forward: f_vis passes through the GRL unchanged\n"
-        "to the driver head, which tries to guess who is driving.",
-    ),
-    (
-        GREEN,
-        (0, (2.5, 1.5)),
-        "Backward, before the GRL: the normal gradient\ntrains the head to name the driver better.",
-    ),
-    (
-        BAD[1],
-        (0, (2.5, 1.5)),
-        "Backward, after the GRL: the sign is flipped,\n"
-        "so the ResNet learns to make that guess fail.",
-    ),
-]
-for row, (color, style, label) in enumerate(legend):
-    y = 11.2 - row * 3.6
-    ax.plot([2.4, 5.6], [y, y], color=color, lw=1.2, ls=style, zorder=4)
-    text(6.6, y, label, fs=4.2, ha="left")
-text(
-    44.0,
-    5.0,
-    "Result in training: the head ends near chance\n"
-    f"(loss {with_adv['adv_loss'][-1]:.2f} vs ln K = {math.log(k_drivers):.2f})",
-    fs=4.0,
-    color=MUTED,
-    italic=True,
-)
+def draw(axes: Axes, assets: dict[str, np.ndarray], frame: Image.Image) -> None:
+    """Draw the whole figure on ``axes`` (the module-level canvas).
 
-out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE
-out_dir.mkdir(parents=True, exist_ok=True)
-fig.savefig(out_dir / "model.pdf", bbox_inches="tight", pad_inches=0.02)
-fig.savefig(out_dir / "model.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
-print("wrote", out_dir / "model.pdf", "and .png")
+    Args:
+        axes: The canvas axes, kept as a parameter so the drawing order reads top to bottom.
+        assets: Arrays saved by ``make_model_assets.py``.
+        frame: The input frame.
+    """
+    del axes  # the helpers draw on the module-level ``ax``
+
+    # ---------------------------------------------------------------- training-only band
+    # Sits under the classifier, right of f_vis, so the figure needs no extra row for it.
+    box(61.2, 14.8, 15.2, 9.6, BAND, ls=(0, (3, 2)), lw=0.8, z=0)
+    pill(66.2, 15.9, "TRAINING ONLY", WHO, fs=4.6)
+
+    # ---------------------------------------------------------------- input
+    photo(0.5, 22.0, 15.0, 11.25, frame, border=INK, lw=1.0)
+    text(8.0, 20.7, f"frame 224{TIMES}224", fs=5.0, color=MUTED)
+
+    # ---------------------------------------------------------------- pose stream (top lane)
+    py = 36.0
+    arrow([(15.5, 27.5), (16.6, 27.5), (16.6, py), (18.4, py)], color=POSE[1])
+    box(18.4, 33.4, 8.6, 5.2, POSE, "Keypoint\nR-CNN", fs=5.4, bold=True)
+    text(22.7, 32.2, "frozen, COCO", fs=4.6, color=POSE[1], italic=True)
+    arrow([(27.0, py), (28.8, py)], color=POSE[1])
+    crop, left, top = keypoint_crop(frame, assets["kps"], 8.0 / 6.4)
+    to_canvas = photo(28.8, 32.8, 8.0, 6.4, crop, border=POSE[1])
+    fw, fh = frame.size
+    skeleton([to_canvas(kx * fw - left, ky * fh - top) for kx, ky in assets["kps"]], dot=5.0)
+    text(32.8, 31.6, "9 upper-body joints", fs=4.6, color=POSE[1])
+
+    arrow([(36.8, py), (39.0, py)], color=POSE[1])
+    # Body-centered pose: origin at mid-shoulder, unit = shoulder width (image y points down).
+    coords = assets["pose_vec"][:18].reshape(9, 2) * np.array([1.0, -1.0])
+    scale = 2.6 / np.abs(coords).max()
+    ox, oy = 42.4, 35.6
+    box(39.0, 32.8, 6.8, 6.4, ("#FFFFFF", POSE[1]), lw=0.7)
+    ax.plot([39.4, 45.4], [oy, oy], color="#D1D5DB", lw=0.5, zorder=4)
+    ax.plot([ox, ox], [33.2, 38.8], color="#D1D5DB", lw=0.5, zorder=4)
+    skeleton([(ox + cx * scale, oy + cy * scale) for cx, cy in coords], dot=4.0)
+    text(42.4, 31.6, "body-centered", fs=4.6, color=POSE[1])
+
+    arrow([(45.8, py), (47.6, py)], color=POSE[1])
+    box(47.6, 33.4, 8.0, 5.2, POSE, f"Pose MLP\n19{ARROW}64{ARROW}64", fs=5.2)
+    arrow([(55.6, py), (57.4, py)], color=POSE[1])
+    feature_bar(57.4, 33.0, 6.0, POSE[1], seed=1)
+    text(58.6, 31.9, r"$\mathbf{f}_{\mathrm{pose}}$ 64", fs=5.0, color=POSE[1])
+
+    # ---------------------------------------------------------------- visual stream (bottom lane)
+    vy = 23.6
+    arrow([(15.5, vy), (17.4, vy)])
+    box(17.4, 17.4, 38.2, 12.6, WHAT, z=1)
+    text(18.4, 28.8, "ResNet-18 backbone", fs=5.8, bold=True, color=WHAT[1], ha="left")
+    text(54.8, 28.8, "ImageNet init, fine-tuned", fs=4.8, color=WHAT[1], ha="right", italic=True)
+    for i, n in enumerate([56, 28, 14, 7]):
+        sx = 19.4 + i * 9.1
+        stage = Image.fromarray(assets[f"stage{i + 1}"]).resize(
+            (224, 224), Image.Resampling.NEAREST
+        )
+        photo(sx, 20.3, 6.6, 6.6, stage, border=WHAT[1], lw=0.6)
+        text(sx + 3.3, 19.0, f"stage {i + 1}  {n}{TIMES}{n}", fs=4.5, color=MUTED)
+        # Forward pass above, the backward pass of the "hide who" loss below.
+        nxt = sx + 9.1 if i < 3 else 57.4
+        arrow([(sx + 6.6, vy + 0.8), (nxt, vy + 0.8)], color=WHAT[1] if i < 3 else INK, lw=0.7)
+        arrow([(nxt, vy - 0.8), (sx + 6.6, vy - 0.8)], color=HIDE, lw=0.9, ls=(0, (2.4, 1.4)))
+    feature_bar(57.4, 20.3, 6.6, WHAT[1], seed=2)
+    text(58.6, 19.2, r"$\mathbf{f}_{\mathrm{vis}}$ 512", fs=5.0, color=WHAT[1])
+
+    # ---------------------------------------------------------------- fuse and classify
+    cx, cy = 63.6, 31.0
+    ax.add_patch(Circle((cx, cy), 1.5, fc="white", ec=INK, lw=0.9, zorder=4))
+    text(cx, cy + 0.1, "+", fs=8.0, bold=True)
+    # Sits a little low so it clears the f_pose label just above-left.
+    text(cx - 1.9, cy - 1.0, "concat", fs=4.6, color=MUTED, ha="right")
+    arrow([(59.8, py), (cx, py), (cx, cy + 1.5)])
+    arrow([(59.8, vy + 3.0), (cx, vy + 3.0), (cx, cy - 1.5)])
+    arrow([(cx + 1.5, cy), (67.2, cy)])
+    box(67.2, cy - 3.2, 7.6, 6.4, WHAT, f"Dropout\n+ Linear\n576{ARROW}10", fs=5.0)
+    text(
+        71.0,
+        cy - 4.6,
+        r"$\mathcal{L}_{\mathrm{cls}} = \mathrm{CE}(y, \hat{y})$",
+        fs=4.8,
+        color=WHAT[1],
+    )
+    arrow([(74.8, cy), (76.6, cy)], color=WHAT[1])
+
+    text(88.4, 38.6, "What is the driver doing?", fs=7.4, bold=True, color=WHAT[1])
+    class_bars(assets["class_probs"], 87.6, 17.4, 11.6, 19.6)
+
+    # ---------------------------------------------------------------- driver adversary (band)
+    hx, hy, hw, hh = 63.8, 19.6, 11.8, 4.0
+    arrow([(59.8, 22.4), (hx, 22.4)], color=WHO[1])
+    box(hx, hy, hw, hh, WHO)
+    text(hx + hw / 2, hy + 2.7, "Driver head", fs=6.0, bold=True)
+    text(hx + hw / 2, hy + 1.0, "guesses who is driving", fs=4.5, color=WHO[1])
+
+    # The head learns to name the driver, and the backbone learns to make that guess fail.
+    dash = (0, (2.4, 1.4))
+    arrow([(71.4, hy), (71.4, 17.6), (74.2, 17.6), (74.2, hy)], color=WHO[1], ls=dash)
+    text(70.8, 18.4, "learn who", fs=5.2, color=WHO[1], bold=True, ha="right")
+    # The confusion loss enters at f_vis (head frozen) and flows back through every ResNet stage.
+    arrow([(hx, 21.0), (59.8, 21.0)], color=HIDE, lw=1.2, ls=dash)
+
+
+def main() -> None:
+    """Load the assets, draw the figure, and save it as PDF and PNG."""
+    with np.load(HERE / "assets" / "model_assets.npz") as data:
+        assets = {k: data[k] for k in data.files}
+    frame = Image.open(FRAME_PATH).convert("RGB")
+    draw(ax, assets, frame)
+    out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else HERE
+    out_dir.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_dir / "model.pdf", bbox_inches="tight", pad_inches=0.02)
+    fig.savefig(out_dir / "model.png", dpi=300, bbox_inches="tight", pad_inches=0.02)
+    print("wrote", out_dir / "model.pdf", "and .png")
+
+
+if __name__ == "__main__":
+    main()
