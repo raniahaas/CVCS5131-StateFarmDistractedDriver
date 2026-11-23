@@ -20,6 +20,11 @@ For the pose-guided models, a frozen KeyPoint R-CNN extracts nine upper-body key
 
 %-------------------------------------------------------------------------
 \subsection{Split Protocol}
+This protocol addresses pitfall from earlier distract-driver studies, such as Yan et al.~\cite{yan2016driving}, 
+evaluated posture classification using random frame-level splits, where random video frames give 
+almost identical images of the same subject and vehicle interior to be in both training and test sets. Where as, Eraqi et al.~\cite{eraqi2019driver}, showed that frame-level splits severly 
+overestimate real-world deployment accuracy through driver and background memorization. That establishes driver-disjoint splitting as a more accurate way for benchmark measuring the true cross-subject generalization.
+
 Since there are only 26 drivers and each appears several hundred of times in the dataset with near identical frames, the driver rather than the image is the unit we generalize over.
 Every split in this study is maded by the driver, not the frame as the model may pickup on exterior motifs rather than the distracted behavior. 
 Based on results from \cite{maDigitalTwin2024}, we used a 70\% training 30\% test split on our final model.

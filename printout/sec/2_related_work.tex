@@ -39,3 +39,7 @@ The anchors are optimized by gradient descent to steer attention toward driver-c
 On SFDDD, they used a driver-disjoint 15/5/6 split, allowing the model to read an accuracy of 92.3\%.
 Based on this, we confirmed our prior notions of random frame splitting increases acuracy.
 Using such notion, we created a model combining the confusion loss with pose fusion similar to Doshi's.
+
+\subsection{2.5 Multi-Stream CNN ensembles for Driver Distraction}
+Eraqi et al.~\cite{eraqi2019driver} shows that random frame splits overestimate real-world performance due to memorization of driver and car interior, 
+by enforcing a driver-disjoint split alongside a weighted ensemble of CNNs trained acrosss multiple segmentations such as RGB frames, skin-segmentation, hand and face crops. Their finding from this study motivates our driver-grouped split protocol focusing on preventing driver leakage.
