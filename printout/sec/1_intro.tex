@@ -4,4 +4,21 @@
 One of the largest issues within driving is collions due to distracted drivers.
 In 2024, over 300,000 US drivers were injured due to distracted drivers\cite{nhstaStats}.
 Regulating driving and introducing methods to reduce distracted driving is a signficant issue effecting not only drivers but also manufacters and insurance companies.
-One response was the State Farm Distracted Driver Detection (SFDDD) dataset, released by State Farm as a Kaggle competition.
+One response was the State Farm Distracted Driver Detection (SFDDD) dataset, released by State Farm as a Kaggle competition which tasked users with developing a computer vision model to accuratley detect distracted driving.
+
+The dataset contains 22,424 frames consisting of 26 different drivers performing ten different activites, consisting of screen-grab images from a longer video--making lots of images nearly identical.
+If the frames are split at random, the same driver can land on both sides of the split, allowing simple models to score above a 99\% by just recognizing the driver rather than the action of distracted driving.
+Published results are therefore hard to compare without an even point of distinction of the split protocol, since a sore can reflect either the person or the activity.
+
+Sought to find an answer if a CNN trained on the SFDD dataset learns who the driver is or what the driver is doing, and is there a way to reduce its reliance on identity?
+To answer this, we built a driver-grouped evaluation protocl that uses a three-fold cross-validation over 22 separate development drivers and foure frozen test drivers that are scored once.
+Each driver is paired with a controlled comparision of four additions to an ImageNet initialized ResNet-18 baselise--which acts as an adversarial driver identity trained with confusion loss and a fusion of upper-body keypoints.
+
+Our results noted errors, but produced very valueable information for the process and analysis moving forward.
+Moving from random to driver grouped evaluation reduces the baseline's accuracy from 0.997 to 0.855 $\pm$ 0.051, and a classical HOG and random forest baseline from 0.994 to 0.590.
+This data shows truly how much driver leakage effects our performance throughout.
+Our full mode, which combines the confusion loss with pose fusion, improves cross-validated accuracy by 1.8 points (0.873 $\pm$) and reaches 0.927 on the test drivers where baseline scores 0.934.
+The differences can be accounted for based on the size of the driver-to-driver spread that is observed.
+Showing that accuracy alone cannot separate the models.
+The clearer bennegits appear in calibration (testing log-loss of 0.286 against 0.408) and in the driver identity probe, which signifies how much identity the learned features carry.
+
